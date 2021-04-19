@@ -67,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
                 @Override
                 public void onDatabaseOperationSuccess() {
 
-                    startActivity(new Intent(SignupActivity.this, MenuActivity.class));
+                    startActivity(new Intent(SignupActivity.this, HomeActivity.class));
 
                     //progressCompleteUI();
 

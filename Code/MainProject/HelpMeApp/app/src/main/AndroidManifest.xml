@@ -59,7 +59,7 @@
             android:name=".appScreens.activities.LoginActivity"
             android:label="@string/login_title" />
         <activity
-            android:name=".appScreens.activities.MenuActivity"
+            android:name=".appScreens.activities.HomeActivity"
             android:label="@string/menu_title" />
         <activity
             android:name=".appScreens.activities.EmergencyContactsActivity"

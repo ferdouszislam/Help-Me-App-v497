@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".appScreens.activities.HomeActivity">
+
+
+    <ImageView
+        android:id="@+id/activity_menu_menuButtonImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/menu"
+        android:onClick="menuClick"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_hamburger_menu" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/whiteTransparent"
+        android:contentDescription="@string/app_name"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_app_logo_dark_v2" />
+
+    <LinearLayout
+        android:id="@+id/activity_main_EMLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="95"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/segoebold"
+                android:padding="4dp"
+                android:text="@string/emergency_mode"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/segoeui"
+                android:padding="4dp"
+                android:text="@string/emergency_mode_explanation" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/activity_main_emergencyModeSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="4dp"
+            android:layout_weight="5"
+            android:gravity="center_horizontal|top"
+            android:padding="4dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menuButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_main_EMLinearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/light_grey_v2"
+        android:elevation="1.5dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/light_v2"
+            android:drawableStart="@drawable/ic_seek_help"
+            android:drawablePadding="16dp"
+            android:fontFamily="@font/segoebold"
+            android:onClick="postHelpClick"
+            android:padding="16dp"
+            android:text="@string/seek_help"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_blue_v2"
+            android:textSize="18sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/light_v2"
+            android:drawableStart="@drawable/ic_location"
+            android:drawablePadding="16dp"
+            android:fontFamily="@font/segoebold"
+            android:padding="16dp"
+            android:text="@string/find_safe_places"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_blue_v2"
+            android:textSize="18sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/light_v2"
+            android:drawableStart="@drawable/ic_emergency_contacts"
+            android:drawablePadding="16dp"
+            android:fontFamily="@font/segoebold"
+            android:onClick="emergencyContactsClick"
+            android:padding="16dp"
+            android:text="@string/emergency_contacts"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_blue_v2"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

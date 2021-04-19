@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSuccess(AuthenticationUser user) {
 
                 // user is logged in start the menu activity
-                startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                startActivity(new Intent(MainActivity.this, HomeActivity.class));
 
                 // disable going back to MainActivity
                 finish();

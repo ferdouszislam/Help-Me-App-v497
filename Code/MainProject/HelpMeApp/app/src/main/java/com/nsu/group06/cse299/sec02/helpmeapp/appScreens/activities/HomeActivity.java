@@ -16,7 +16,7 @@ import com.nsu.group06.cse299.sec02.helpmeapp.broadcastReceivers.NetworkConnecti
 /**
  * App home page, which is a menu
  */
-public class MenuActivity extends AppCompatActivity implements NetworkConnectionBroadcastReceiver.InternetStatusCallback {
+public class HomeActivity extends AppCompatActivity implements NetworkConnectionBroadcastReceiver.InternetStatusCallback {
 
     private NetworkConnectionBroadcastReceiver mNetworkConnBroadcastReceiver = null;
 
@@ -27,7 +27,7 @@ public class MenuActivity extends AppCompatActivity implements NetworkConnection
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        setContentView(R.layout.activity_home);
 
         init();
     }
@@ -65,8 +65,11 @@ public class MenuActivity extends AppCompatActivity implements NetworkConnection
         super.onStop();
     }
 
+    public void menuClick(View view) {
+    }
+
     /**
-     * Menu option click listeners
+     * Option click listeners
      */
 
     public void emergencyContactsClick(View view) {
@@ -121,7 +124,7 @@ public class MenuActivity extends AppCompatActivity implements NetworkConnection
 
     private void showNoInternetDialog() {
 
-        AlertDialog alertDialog = new AlertDialog.Builder(MenuActivity.this).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
 
         String title = getString(R.string.no_internet);
         String explanation = getString(R.string.please_enable_internet_to_continue);

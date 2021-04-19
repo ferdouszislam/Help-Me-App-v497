@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onAuthenticationSuccess(AuthenticationUser user) {
 
-            startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
             //progressCompleteUI();
 
