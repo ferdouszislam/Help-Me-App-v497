@@ -1,8 +1,10 @@
 package com.nsu.group06.cse299.sec02.helpmeapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
@@ -49,18 +51,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mAuth.authenticateUser();
-        showSplashScreen();    //Show splash screen
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            showSplashScreen();    //Show splash screen
+        }
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void showSplashScreen()
     {
         new Splashy(this)
-                .setLogo(R.drawable.ic_applogo)
+                .setLogo(R.drawable.ic_app_logo_v2)
                 .setTitle(getString(R.string.appTitle))
-                .setTitleColor("#2E2E2E")
+                //.setTitleSize(21)
+                .setTitleColor("#fafafa")
                 .setSubTitle(getString(R.string.subtitle))
-                .setSubTitleColor("#374045")
+                .setSubTitleSize(14)
+                .setSubTitleColor("#fafafa")
                 .setBackgroundResource(R.drawable.custom_gradient_color)
                 .setProgressColor("#FFFFFF")
                 .setFullScreen(true)
