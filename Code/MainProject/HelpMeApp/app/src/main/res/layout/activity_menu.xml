@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_menu_mainRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_gradient_color"
+    tools:context=".appScreens.v2_activities.MenuActivity">
+
+    <LinearLayout
+        android:id="@+id/activity_menu_topBarLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:layout_weight="10"
+            android:background="@color/whiteTransparent"
+            android:contentDescription="@string/back"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:layout_weight="80"
+            android:fontFamily="@font/segoebold"
+            android:gravity="start|center_vertical"
+            android:padding="4dp"
+            android:text="@string/menu"
+            android:textColor="@color/light_v2"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:layout_weight="10"
+            android:contentDescription="@string/app_name"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_app_logo_light_v2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_menu_topBarLinearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/light_transparent_v2"
+            android:drawableStart="@drawable/ic_user_light"
+            android:drawablePadding="16dp"
+            android:elevation="4dp"
+            android:fontFamily="@font/segoebold"
+            android:onClick="setupProfileClick"
+            android:padding="24dp"
+            android:text="@string/my_profile"
+            android:textAlignment="viewStart"
+            android:textColor="@color/light_v2"
+            android:textSize="18sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/light_transparent_v2"
+            android:drawableStart="@drawable/ic_settings"
+            android:drawablePadding="16dp"
+            android:elevation="4dp"
+            android:fontFamily="@font/segoebold"
+            android:onClick="settingsClick"
+            android:padding="24dp"
+            android:text="@string/settings"
+            android:textAlignment="viewStart"
+            android:textColor="@color/light_v2"
+            android:textSize="18sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/light_transparent_v2"
+            android:drawableStart="@drawable/ic_logout"
+            android:drawablePadding="16dp"
+            android:elevation="4dp"
+            android:fontFamily="@font/segoebold"
+            android:onClick="logoutClick"
+            android:padding="24dp"
+            android:text="@string/logout"
+            android:textAlignment="viewStart"
+            android:textColor="@color/light_v2"
+            android:textSize="18sp" />
+    </LinearLayout>
+</RelativeLayout>

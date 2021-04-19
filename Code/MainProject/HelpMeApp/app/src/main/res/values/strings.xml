@@ -155,6 +155,8 @@
     <string name="emergency_mode_explanation">Let’s you seek help instantly and share live location</string>
     <string name="find_safe_places">Find Safe Places</string>
     <string name="seek_help">Seek Help</string>
+    <string name="logout">Logout</string>
+    <string name="back">back</string>
 
 
 </resources>

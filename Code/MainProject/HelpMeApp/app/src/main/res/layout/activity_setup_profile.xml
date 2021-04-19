@@ -17,17 +17,20 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:contentDescription="@string/app_name"
+            android:padding="4dp"
             android:src="@drawable/ic_app_logo_dark_v2" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_margin="4dp"
             android:fontFamily="@font/segoeui"
+            android:padding="4dp"
             android:text="@string/my_profile"
             android:textColor="@color/dark_blue_v2"
-            android:textSize="25sp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,7 +57,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/custom_edittext"
             android:drawableStart="@drawable/ic_user_logo"
-            android:drawablePadding="16dp"
+            android:drawablePadding="24dp"
             android:fontFamily="@font/segoeui"
             android:hint="@string/name"
             android:importantForAutofill="no"

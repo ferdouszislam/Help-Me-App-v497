@@ -24,6 +24,8 @@
 
         <activity android:name=".appScreens.v2_activities.EnterPhoneNumberActivity" />
         <activity android:name=".appScreens.v2_activities.EnterOTPCodeActivity" />
+        <activity android:name=".appScreens.v2_activities.MenuActivity" />
+        <activity android:name=".appScreens.v2_activities.InternetAlertActivity" />
 
         <receiver
             android:name=".broadcastReceivers.NetworkConnectionBroadcastReceiver"
