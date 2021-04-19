@@ -3,12 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/ic_vector_header"
-        android:elevation="-.1dp"/>
 
     <LinearLayout
         android:id="@+id/header"
@@ -24,30 +18,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_applogo" />
+            android:src="@drawable/ic_app_logo_dark_v2" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/segoeui"
             android:layout_marginStart="10dp"
-            android:textSize="25sp"
-            android:textColor="#FFF"
-            android:text="@string/setup_profile"/>
+            android:fontFamily="@font/segoeui"
+            android:text="@string/my_profile"
+            android:textColor="@color/dark_blue_v2"
+            android:textSize="25sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/userinputs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="25dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/menu_button"
         android:elevation="1.5dp"
-        android:layout_below="@id/header"
-        android:background="@drawable/menu_button">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/username_setupProfile_EditText"
@@ -56,10 +51,10 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/custom_edittext"
             android:drawableStart="@drawable/ic_user_logo"
-            android:drawablePadding="5dp"
+            android:drawablePadding="16dp"
             android:fontFamily="@font/segoeui"
             android:hint="@string/name"
             android:importantForAutofill="no"
@@ -67,75 +62,46 @@
             android:paddingStart="18dp"
             android:paddingTop="20dp"
             android:paddingEnd="10dp"
-            android:paddingBottom="20dp"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/dateOfBirth_setupProfile_EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/custom_edittext"
-            android:drawableStart="@drawable/ic_calendar"
-            android:drawablePadding="5dp"
-            android:fontFamily="@font/segoeui"
-            android:hint="@string/date_of_birth"
-            android:importantForAutofill="no"
-            android:inputType="date"
-            android:paddingStart="18dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="20dp"
-            android:textSize="20sp" />
+            android:paddingBottom="20dp" />
 
         <EditText
             android:id="@+id/address_setupProfile_EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/custom_edittext"
             android:drawableStart="@drawable/ic_location"
-            android:drawablePadding="5dp"
+            android:drawablePadding="16dp"
             android:fontFamily="@font/segoeui"
             android:hint="@string/address"
             android:importantForAutofill="no"
-            android:inputType="text|textNoSuggestions"
-            android:paddingStart="18dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="20dp"
-            android:textSize="20sp" />
+            android:inputType="text|textNoSuggestions|textMultiLine"
+            android:padding="24dp"
+            android:textAlignment="viewStart" />
 
-        <EditText
-            android:id="@+id/phoneNumber_setupProfile_EditText"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/custom_edittext"
-            android:drawableStart="@drawable/ic_phone_icon"
-            android:drawablePadding="3.5dp"
-            android:fontFamily="@font/segoeui"
-            android:hint="@string/phone_number"
-            android:importantForAutofill="no"
-            android:inputType="phone|textNoSuggestions"
-            android:paddingStart="18dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="20dp"
-            android:textSize="20sp" />
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/segoebold"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/address_input_is_optional" />
 
         <Button
             android:id="@+id/btn_setupProfile_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/custom_button"
@@ -144,6 +110,7 @@
             android:padding="20dp"
             android:text="@string/save"
             android:textColor="#fff"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
+
     </LinearLayout>
 </RelativeLayout>

@@ -26,7 +26,7 @@ public class SetupProfileActivity extends AppCompatActivity {
     private static final String TAG = "SPA-debug";
 
     // ui
-    private EditText mUsernameEditText, mDateOfBirhtEditText, mAddressEditText, mPhoneNumberEditText;
+    private EditText mUsernameEditText, /*mDateOfBirhtEditText,*/ mAddressEditText/*, mPhoneNumberEditText*/;
     private Button mSaveButton;
 
     // model
@@ -94,9 +94,9 @@ public class SetupProfileActivity extends AppCompatActivity {
     private void init() {
 
         mUsernameEditText = findViewById(R.id.username_setupProfile_EditText);
-        mDateOfBirhtEditText = findViewById(R.id.dateOfBirth_setupProfile_EditText);
+        //mDateOfBirhtEditText = findViewById(R.id.dateOfBirth_setupProfile_EditText);
         mAddressEditText = findViewById(R.id.address_setupProfile_EditText);
-        mPhoneNumberEditText = findViewById(R.id.phoneNumber_setupProfile_EditText);
+        //mPhoneNumberEditText = findViewById(R.id.phoneNumber_setupProfile_EditText);
         mSaveButton = findViewById(R.id.btn_setupProfile_save);
 
         mUser = new User();
@@ -134,9 +134,9 @@ public class SetupProfileActivity extends AppCompatActivity {
     private void showReadUserInfoInUI() {
 
         mUsernameEditText.setText(mUser.getUsername());
-        mDateOfBirhtEditText.setText(mUser.getDateOfBirth());
+        //mDateOfBirhtEditText.setText(mUser.getDateOfBirth());
         mAddressEditText.setText(mUser.getAddress());
-        mPhoneNumberEditText.setText(mUser.getPhoneNumber());
+        //mPhoneNumberEditText.setText(mUser.getPhoneNumber());
     }
 
 
@@ -145,7 +145,7 @@ public class SetupProfileActivity extends AppCompatActivity {
      */
     public void saveProfileClick(View view) {
 
-        if(validateInputs()==false) return;
+        if(!validateInputs()) return;
 
         //TODO: update database
         mUserInfoFirebaseRDBSingleOperation.update(mUser);
@@ -160,43 +160,50 @@ public class SetupProfileActivity extends AppCompatActivity {
         boolean isValid = true;
 
         String name = mUsernameEditText.getText().toString();
-        String dateOfBirth = mDateOfBirhtEditText.getText().toString();
+        //String dateOfBirth = mDateOfBirhtEditText.getText().toString();
         String address = mAddressEditText.getText().toString();
-        String phoneNumber = mPhoneNumberEditText.getText().toString();
-        if(phoneNumber.charAt(0)=='0') phoneNumber = "+88" + phoneNumber;
+        //String phoneNumber = mPhoneNumberEditText.getText().toString();
+        //if(phoneNumber.charAt(0)=='0') phoneNumber = "+88" + phoneNumber;
 
         if(!UserInputValidator.isNameValid(name)){
             mUsernameEditText.setError(getString(R.string.invalid_username));
             isValid = false;
         }
+        /*
         if(!UserInputValidator.isDateOfBirthValid(dateOfBirth)){
             mDateOfBirhtEditText.setError(getString(R.string.invalid_date_of_birth));
             isValid = false;
         }
+        */
         if(!UserInputValidator.isAddressValid(address)){
-            mAddressEditText.setError(getString(R.string.invalid_address));
-            isValid = false;
+            // address input is optional
+
+            address = "";
+            //mAddressEditText.setError(getString(R.string.invalid_address));
+            //isValid = false;
         }
+        /*
         if(!UserInputValidator.isPhoneNumberValid(phoneNumber)){
             mPhoneNumberEditText.setError(getString(R.string.invalid_phone_number));
             isValid = false;
         }
+         */
 
         if(!isValid) return false;
 
         if(mUser.getUsername().equals(name)
-                && mUser.getDateOfBirth().equals(dateOfBirth)
+                //&& mUser.getDateOfBirth().equals(dateOfBirth)
                 && mUser.getAddress().equals(address)
-                && mUser.getPhoneNumber().equals(phoneNumber)
+                //&& mUser.getPhoneNumber().equals(phoneNumber)
         ){
             // user profile data was not changed
             return false;
         }
 
         mUser.setUsername(name);
-        mUser.setDateOfBirth(dateOfBirth);
+        //mUser.setDateOfBirth(dateOfBirth);
         mUser.setAddress(address);
-        mUser.setPhoneNumber(phoneNumber);
+        //mUser.setPhoneNumber(phoneNumber);
 
         return true;
     }
@@ -210,9 +217,9 @@ public class SetupProfileActivity extends AppCompatActivity {
         mSaveButton.setText(getString(R.string.loading));
 
         mUsernameEditText.setEnabled(false);
-        mDateOfBirhtEditText.setEnabled(false);
+        //mDateOfBirhtEditText.setEnabled(false);
         mAddressEditText.setEnabled(false);
-        mPhoneNumberEditText.setEnabled(false);
+        //mPhoneNumberEditText.setEnabled(false);
     }
 
     /*
@@ -224,9 +231,9 @@ public class SetupProfileActivity extends AppCompatActivity {
         mSaveButton.setText(getString(R.string.saving));
 
         mUsernameEditText.setEnabled(false);
-        mDateOfBirhtEditText.setEnabled(false);
+        //mDateOfBirhtEditText.setEnabled(false);
         mAddressEditText.setEnabled(false);
-        mPhoneNumberEditText.setEnabled(false);
+        //mPhoneNumberEditText.setEnabled(false);
     }
 
     /*
@@ -238,9 +245,9 @@ public class SetupProfileActivity extends AppCompatActivity {
         mSaveButton.setText(getString(R.string.save));
 
         mUsernameEditText.setEnabled(true);
-        mDateOfBirhtEditText.setEnabled(true);
+        //mDateOfBirhtEditText.setEnabled(true);
         mAddressEditText.setEnabled(true);
-        mPhoneNumberEditText.setEnabled(true);
+        //mPhoneNumberEditText.setEnabled(true);
     }
 
     private void showToast(String message){
