@@ -27,9 +27,9 @@
             android:exported="true" />
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".appScreens.activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".HelpFeedActivity" />
+        <activity android:name=".appScreens.activities.HelpFeedActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -41,7 +41,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".appScreens.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,24 +49,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignupActivity"
+            android:name=".appScreens.activities.SignupActivity"
             android:label="@string/sign_up_title" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".appScreens.activities.LoginActivity"
             android:label="@string/login_title" />
         <activity
-            android:name=".MenuActivity"
+            android:name=".appScreens.activities.MenuActivity"
             android:label="@string/menu_title" />
         <activity
-            android:name=".EmergencyContactsActivity"
+            android:name=".appScreens.activities.EmergencyContactsActivity"
             android:label="@string/emergency_contacts_title" />
         <activity
-            android:name=".SetupProfileActivity"
+            android:name=".appScreens.activities.SetupProfileActivity"
             android:label="@string/setup_profile_title" />
         <activity
-            android:name=".HelpPostActivity"
+            android:name=".appScreens.activities.HelpPostActivity"
             android:label="@string/help_post_title" />
-        <activity android:name=".SingleHelpPostActivity">
+        <activity android:name=".appScreens.activities.SingleHelpPostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

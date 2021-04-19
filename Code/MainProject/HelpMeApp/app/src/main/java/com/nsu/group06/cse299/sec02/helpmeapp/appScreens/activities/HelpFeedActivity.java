@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp;
+package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
 import com.nsu.group06.cse299.sec02.helpmeapp.recyclerViewAdapters.EmergencyContactsAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.recyclerViewAdapters.HelpPostsAdapter;

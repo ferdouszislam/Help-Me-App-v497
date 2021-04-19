@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp;
+package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -29,6 +29,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.FirebaseEmailPasswordAuthentication;

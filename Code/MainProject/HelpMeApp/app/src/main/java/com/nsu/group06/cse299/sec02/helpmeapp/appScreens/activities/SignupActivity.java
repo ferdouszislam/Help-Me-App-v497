@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp;
+package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.EmailPasswordAuthUser;

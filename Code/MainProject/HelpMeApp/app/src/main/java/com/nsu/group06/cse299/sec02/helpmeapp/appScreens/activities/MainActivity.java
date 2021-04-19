@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp;
+package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.FirebaseEmailPasswordAuthentication;

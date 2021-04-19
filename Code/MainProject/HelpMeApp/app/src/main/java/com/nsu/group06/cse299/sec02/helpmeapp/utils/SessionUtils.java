@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.nsu.group06.cse299.sec02.helpmeapp.LoginActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.LoginActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContactsSharedPref;

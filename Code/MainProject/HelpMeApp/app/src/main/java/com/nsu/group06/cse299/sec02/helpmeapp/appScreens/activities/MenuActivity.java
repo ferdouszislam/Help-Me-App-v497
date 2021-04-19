@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp;
+package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.FirebaseEmailPasswordAuthentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.broadcastReceivers.NetworkConnectionBroadcastReceiver;
-import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
 
 /**
  * App home page, which is a menu
