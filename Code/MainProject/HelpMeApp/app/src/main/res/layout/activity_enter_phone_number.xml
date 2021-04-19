@@ -39,6 +39,7 @@
             android:background="@drawable/custom_edittext"
             android:elevation="2dp"
             android:ems="10"
+            android:fontFamily="@font/segoeui"
             android:hint="@string/your_valid_11_digit_phone_number"
             android:importantForAutofill="no"
             android:inputType="phone"
@@ -64,6 +65,8 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/custom_gradient_color"
+            android:fontFamily="@font/segoebold"
+            android:onClick="submitClick"
             android:padding="8dp"
             android:text="@string/submit"
             android:textColor="@color/light_v2" />
