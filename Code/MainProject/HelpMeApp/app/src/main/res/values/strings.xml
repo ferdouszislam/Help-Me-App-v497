@@ -146,6 +146,10 @@
     <string name="submit">Submit</string>
     <string name="your_valid_11_digit_phone_number">Your valid 11 digit phone number</string>
     <string name="_880">+880</string>
+    <string name="otp_code">OTP code</string>
+    <string name="enter_the_6_digit_code_sent_to_your_phone">Enter the 6 digit code sent to your phone</string>
+    <string name="verify">Verify</string>
+    <string name="resend">Resend</string>
 
 
 </resources>
