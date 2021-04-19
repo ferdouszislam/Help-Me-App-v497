@@ -142,6 +142,10 @@
     <string name="no_internet">No internet!</string>
     <string name="please_enable_internet_to_continue">Please enable internet connection to continue</string>
     <string name="internet_connection_lost">Internet connection lost!</string>
+    <string name="enter_you_valid_11_digit_phone_number">Enter you valid 11 digit phone number</string>
+    <string name="submit">Submit</string>
+    <string name="your_valid_11_digit_phone_number">Your valid 11 digit phone number</string>
+    <string name="_880">+880</string>
 
 
 </resources>

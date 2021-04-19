@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public void showSplashScreen()
     {
         new Splashy(this)
-                .setLogo(R.drawable.ic_app_logo_v2)
+                .setLogo(R.drawable.ic_app_logo_light_v2)
                 .setTitle(getString(R.string.appTitle))
                 //.setTitleSize(21)
                 .setTitleColor("#fafafa")
