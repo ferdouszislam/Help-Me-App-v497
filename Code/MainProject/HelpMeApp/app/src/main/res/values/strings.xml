@@ -157,6 +157,7 @@
     <string name="seek_help">Seek Help</string>
     <string name="logout">Logout</string>
     <string name="back">back</string>
+    <string name="continue_">Continue</string>
 
 
 </resources>

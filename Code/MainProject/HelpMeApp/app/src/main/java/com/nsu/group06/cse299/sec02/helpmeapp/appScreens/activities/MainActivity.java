@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
@@ -43,19 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAuthenticationFailure(String message) {
-
-                // user needs to login or signup
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
-                // disable going back to MainActivity
-                finish();
+                // do nothing
             }
         });
         mAuth.authenticateUser();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            showSplashScreen();    //Show splash screen
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            showSplashScreen();    //Show splash screen
+//        }
 
     }
 
@@ -75,5 +71,14 @@ public class MainActivity extends AppCompatActivity {
                 .setFullScreen(true)
                 .setDuration(2500)
                 .show();
+    }
+
+    public void continueClick(View view) {
+
+        // user needs to login or signup
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+        // disable going back to MainActivity
+        finish();
     }
 }
