@@ -85,4 +85,12 @@ public class MenuActivity extends InternetAlertActivity {
 
         alertDialog.show();
     }
+
+    /*
+    custom back button press
+     */
+    public void backPress(View view) {
+
+        finish();
+    }
 }
