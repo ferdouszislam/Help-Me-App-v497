@@ -207,4 +207,12 @@ public class EmergencyContactsActivity extends AppCompatActivity
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+    /*
+    custom back button onClick
+     */
+    public void backPress(View view) {
+
+        finish();
+    }
 }

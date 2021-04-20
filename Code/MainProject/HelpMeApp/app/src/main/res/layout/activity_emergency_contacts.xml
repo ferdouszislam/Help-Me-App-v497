@@ -4,45 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/custom_gradient_color"
     tools:context=".appScreens.activities.EmergencyContactsActivity">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/ic_vector_header"
-        android:elevation="-.1dp"/>
 
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentTop="true">
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="10"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_applogo" />
+            android:onClick="backPress"
+            android:padding="4dp"
+            android:src="@drawable/ic_back" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="80"
             android:fontFamily="@font/segoeui"
-            android:layout_marginStart="10dp"
-            android:textSize="25sp"
+            android:padding="4dp"
+            android:text="@string/emergency_contacts"
             android:textColor="#FFF"
-            android:text="@string/emergency_contacts"/>
+            android:textSize="21sp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="10"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_app_logo_light_v2" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/emergencyContactsEmpty_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/segoeui"
         android:layout_centerInParent="true"
         android:elevation="2dp"
+        android:fontFamily="@font/segoeui"
         android:text="@string/emergencyContactsEmpty_TextView"
         android:textSize="18sp" />
 
@@ -50,15 +64,17 @@
         android:id="@+id/userinputs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-91dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/light_v2"
         android:elevation="1.5dp"
-        android:layout_below="@id/header"
-        android:background="@drawable/menu_button">
+        android:orientation="vertical"
+        android:padding="4dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/emergencyContacts_RecyclerView"
@@ -77,13 +93,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="35dp"
+        android:layout_margin="32dp"
+        android:backgroundTint="@color/dark_blue_v2"
         android:clickable="true"
+        android:contentDescription="@string/add_icon_Alt"
         android:focusable="true"
         android:onClick="addClick"
+        app:backgroundTint="#ffffff"
         app:borderWidth="0dp"
-        android:backgroundTint="#FF5A5A"
-        app:srcCompat="@drawable/ic_baseline_add_24"
-        android:contentDescription="@string/add_icon_Alt" />
+        app:elevation="8dp"
+        app:srcCompat="@drawable/ic_add" />
 </RelativeLayout>
