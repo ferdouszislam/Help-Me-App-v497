@@ -69,9 +69,14 @@
         <activity
             android:name=".appScreens.activities.SetupProfileActivity"
             android:label="@string/setup_profile_title" />
+
+        <!-- android:windowSoftInputMode="adjustPan"
+        so that keyboard does not push the UI components up -->
         <activity
             android:name=".appScreens.activities.HelpPostActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/help_post_title" />
+
         <activity android:name=".appScreens.activities.SingleHelpPostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

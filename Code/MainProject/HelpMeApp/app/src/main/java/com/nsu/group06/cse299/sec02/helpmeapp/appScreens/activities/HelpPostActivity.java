@@ -504,11 +504,21 @@ public class HelpPostActivity extends AppCompatActivity {
 
 
     /*
-    'make public' checkbox click
+    'me' checkbox click
+    Who is in trouble? -> Me
      */
     public void makePublicCheckboxClick(View view) {
 
         mHelpPost.setIsPublic(!mHelpPost.getIsPublic());
+    }
+
+    /*
+    'someone else' checkbox click
+    Who is in trouble? -> Someone Else
+     */
+    public void asWitnessCheckboxClick(View view) {
+
+        // TODO: implement
     }
 
     /*
@@ -898,4 +908,6 @@ public class HelpPostActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT)
                 .show();
     }
+
+
 }
