@@ -23,7 +23,6 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
     private TextView mNoDataFoundTextView;
     private RecyclerView mHelpPostsRecyclerView;
     private HelpPostsAdapter mHelpPostsAdapter;
-    private View headerView;
     private LinearLayout headerLayout;
 
     @Override
@@ -42,7 +41,6 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
         mHelpPostsRecyclerView.setAdapter(mHelpPostsAdapter);
         mHelpPostsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         headerLayout = findViewById(R.id.header);
-        headerView = findViewById(R.id.headerId);
     }
 
     @Override
@@ -68,7 +66,14 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
 
         mNoDataFoundTextView.setVisibility(View.GONE);
         mHelpPostsRecyclerView.setVisibility(View.VISIBLE);
-        headerView.setVisibility(View.VISIBLE);
         headerLayout.setVisibility(View.VISIBLE);
+    }
+
+    /*
+    custom back button onClick
+     */
+    public void backPress(View view) {
+
+        finish();
     }
 }

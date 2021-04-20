@@ -62,7 +62,8 @@ public class HomeActivity extends InternetAlertActivity {
         startActivity(new Intent(this, HelpPostActivity.class));
     }
 
-    public void helpFeedClick(View view) {
+    public void findSafePlacesClick(View view) {
+    // TODO: implement. Currently opens help feed with all posts
 
         if(!mIsInternetAvailable){
             showNoInternetDialog();

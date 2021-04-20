@@ -161,6 +161,8 @@
     <string name="me">Me</string>
     <string name="someone_else">Someone else</string>
     <string name="who_needs_help">Who needs help?</string>
+    <string name="nearby_posts">Nearby Posts</string>
+    <string name="help_feed_location_placeholder_text">5 help posts found near Mirpur-1, Janata Housing, Dhaka-1216</string>
 
 
 </resources>

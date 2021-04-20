@@ -5,81 +5,94 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="7.5dp"
-    android:background="@drawable/custom_ec_itemview_background"
-    android:elevation="4dp"
+    android:background="@color/light_blue_v2"
+    android:elevation="2dp"
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/address_helpPostItemView_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:drawablePadding="6dp"
-        android:fontFamily="@font/segoeui"
-        android:text="@string/address_singleHelpPost_TextView_placeholder"
-        android:textSize="14sp"
-        app:drawableStartCompat="@drawable/ic_baseline_location_on_24" />
-
-    <TextView
-        android:id="@+id/time_helpPostItemView_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:drawablePadding="8dp"
-        android:fontFamily="@font/segoeui"
-        android:text="@string/time_singleHelpPost_TextView_placeholder"
-        android:textSize="14sp"
-        app:drawableStartCompat="@drawable/ic_calendar" />
-
     <ImageView
         android:id="@+id/photo_helpPostItemView_ImageView"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="8dp"
         android:contentDescription="@string/helpPost_photo_alt"
+        android:elevation="4dp"
         android:foregroundGravity="center"
         android:visibility="gone"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/content_helpPostItemView_TextView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/segoeui"
-        android:padding="4dp"
-        android:text="@string/content_singleHelpPost_TextView_placeholder"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:background="@color/light_v2"
+        android:elevation="4dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/showLocation_helpPostItemView_Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/custom_button2"
-        android:drawableStart="@drawable/ic_location"
-        android:fontFamily="@font/segoebold"
-        android:gravity="center"
-        android:onClick="showLocationClick"
-        android:padding="8dp"
-        android:text="@string/showLocation_singleHelpPost_Button_label" />
+        <TextView
+            android:id="@+id/address_helpPostItemView_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:drawablePadding="4dp"
+            android:fontFamily="@font/segoebold"
+            android:padding="4dp"
+            android:text="@string/address_singleHelpPost_TextView_placeholder"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_location" />
+
+        <TextView
+            android:id="@+id/time_helpPostItemView_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/segoebold"
+            android:padding="4dp"
+            android:text="@string/time_singleHelpPost_TextView_placeholder"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_calendar" />
+
+        <TextView
+            android:id="@+id/content_helpPostItemView_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/segoeui"
+            android:padding="4dp"
+            android:text="@string/content_singleHelpPost_TextView_placeholder"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/showLocation_helpPostItemView_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/custom_gradient_color"
+            android:fontFamily="@font/segoeui"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/showLocation_singleHelpPost_Button_label"
+            android:textAllCaps="false"
+            android:textColor="@color/light_v2" />
+    </LinearLayout>
 
 </LinearLayout>

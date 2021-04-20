@@ -137,6 +137,7 @@
             android:drawableStart="@drawable/ic_location"
             android:drawablePadding="16dp"
             android:fontFamily="@font/segoebold"
+            android:onClick="findSafePlacesClick"
             android:padding="16dp"
             android:text="@string/find_safe_places"
             android:textAlignment="viewStart"
