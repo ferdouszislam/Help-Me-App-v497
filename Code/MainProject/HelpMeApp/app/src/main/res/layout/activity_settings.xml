@@ -5,34 +5,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".appScreens.activities.SettingsActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/ic_vector_header"
-        android:elevation="-.1dp"/>
-
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start|center_vertical"
-        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
         android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
-        android:layout_alignParentTop="true">
+        android:gravity="start|center_vertical"
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_applogo"/>
+            android:layout_margin="8dp"
+            android:onClick="backPress"
+            android:padding="8dp"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back_blue" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/segoeui"
+            android:layout_margin="8dp"
             android:layout_marginStart="10dp"
-            android:textSize="25sp"
-            android:textColor="#FFF"
-            android:text="@string/settings"/>
+            android:fontFamily="@font/segoebold"
+            android:padding="8dp"
+            android:text="@string/settings"
+            android:textColor="@color/dark_blue_v2"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -55,6 +57,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginTop="15dp">
+
             <Switch
                 android:id="@+id/sw1"
                 android:layout_width="match_parent"
@@ -63,12 +66,14 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
-                android:padding="10dp"
-                android:theme="@style/SwitchTheme"
-                android:text="@string/receive_nearby_distress_calls"
-                android:textSize="16sp"
                 android:fontFamily="@font/segoeui"
+                android:padding="10dp"
+                android:text="@string/receive_nearby_distress_calls"
+                android:textColor="@color/dark_blue_v2"
+                android:textSize="16sp"
+                android:theme="@style/SwitchTheme"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
+
             <Switch
                 android:id="@+id/sw2"
                 android:layout_width="match_parent"
@@ -77,12 +82,14 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/segoeui"
                 android:padding="10dp"
                 android:text="@string/danger_mode"
+                android:textColor="@color/dark_blue_v2"
                 android:textSize="16sp"
-                android:fontFamily="@font/segoeui"
                 android:theme="@style/SwitchTheme"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
+
             <Switch
                 android:id="@+id/sw3"
                 android:layout_width="match_parent"
@@ -91,12 +98,14 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/segoeui"
                 android:padding="10dp"
                 android:text="@string/location_tracking"
+                android:textColor="@color/dark_blue_v2"
                 android:textSize="16sp"
                 android:theme="@style/SwitchTheme"
-                android:fontFamily="@font/segoeui"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
+
             <Switch
                 android:id="@+id/sw4"
                 android:layout_width="match_parent"
@@ -105,11 +114,12 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/segoeui"
                 android:padding="10dp"
                 android:text="@string/receive_notifications"
+                android:textColor="@color/dark_blue_v2"
                 android:textSize="16sp"
                 android:theme="@style/SwitchTheme"
-                android:fontFamily="@font/segoeui"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <Button
@@ -120,15 +130,15 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
-                android:padding="10dp"
                 android:background="#00FFFFFF"
-                android:text="@string/logout_from_account"
-                android:textSize="16sp"
-                android:textAllCaps="false"
-                android:textAlignment="textStart"
                 android:fontFamily="@font/segoeui"
                 android:onClick="logoutClick"
-                />
+                android:padding="10dp"
+                android:text="@string/logout_from_account"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textColor="@color/dark_blue_v2"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

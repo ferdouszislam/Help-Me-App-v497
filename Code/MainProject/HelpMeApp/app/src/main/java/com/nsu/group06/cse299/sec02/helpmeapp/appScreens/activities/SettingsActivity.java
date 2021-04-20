@@ -23,4 +23,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         SessionUtils.logout(this, new FirebaseEmailPasswordAuthentication());
     }
+
+    public void backPress(View view) {
+
+        finish();
+    }
 }
