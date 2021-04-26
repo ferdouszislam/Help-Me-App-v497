@@ -1,5 +1,7 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth;
 
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
+
 /*
 Auth user with email & password
  */

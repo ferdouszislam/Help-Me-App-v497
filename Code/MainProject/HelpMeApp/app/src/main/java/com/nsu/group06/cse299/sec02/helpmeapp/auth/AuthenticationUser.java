@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth;
+package com.nsu.group06.cse299.sec02.helpmeapp.auth;
 
 /*
 Abstract authentication user model
