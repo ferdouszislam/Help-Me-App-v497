@@ -32,7 +32,6 @@ public class SetupProfileActivity extends AppCompatActivity {
     // model
     private User mUser;
 
-
     // variable used for fetching user uid
     private Authentication mAuth;
     private Authentication.AuthenticationCallbacks mAuthenticationCallbacks = new Authentication.AuthenticationCallbacks() {
@@ -55,6 +54,8 @@ public class SetupProfileActivity extends AppCompatActivity {
     };
 
 
+    // variable for shortcut for using a single database operation listener
+    private boolean mSaveButtonWasClicked = false;
     // variables to read/write information of users to/from the database
     private Database.SingleOperationDatabase<User> mUserInfoFirebaseRDBSingleOperation;
     private Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User> mUserInfoSingleOperationDatabaseCallback =
@@ -152,6 +153,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         if(!validateInputs()) return;
 
+        mSaveButtonWasClicked = true;
         //TODO: update database
         mUserInfoFirebaseRDBSingleOperation.update(mUser);
         updatingProfileUI();
@@ -245,6 +247,12 @@ public class SetupProfileActivity extends AppCompatActivity {
     set UI when database operation (load/update profile info) is complete
      */
     private void databaseOperationCompleteUI() {
+
+        if(mSaveButtonWasClicked){
+            // means this was called after user data got updated at database
+            showToast(getString(R.string.saved));
+            finish();
+        }
 
         mSaveButton.setEnabled(true);
         mSaveButton.setText(getString(R.string.save));
