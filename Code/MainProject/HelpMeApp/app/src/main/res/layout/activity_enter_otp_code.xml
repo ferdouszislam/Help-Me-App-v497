@@ -61,6 +61,7 @@
             android:text="@string/enter_the_6_digit_code_sent_to_your_phone" />
 
         <Button
+            android:id="@+id/activity_enter_otp_code_verifyButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -69,6 +70,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/custom_gradient_color"
             android:fontFamily="@font/segoebold"
+            android:onClick="verifyCodeClick"
             android:padding="8dp"
             android:text="@string/verify"
             android:textColor="@color/light_v2" />
@@ -81,6 +83,7 @@
             android:layout_margin="8dp"
             android:fontFamily="@font/segoeui"
             android:gravity="center"
+            android:onClick="resendCodeClick"
             android:padding="8dp"
             android:text="@string/resend"
             android:textColor="@color/dark_blue_v2" />

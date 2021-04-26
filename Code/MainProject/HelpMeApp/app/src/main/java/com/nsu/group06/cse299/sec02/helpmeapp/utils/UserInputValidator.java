@@ -47,4 +47,9 @@ public class UserInputValidator {
 
         return phoneNumber.startsWith("+880") && phoneNumber.length() == 14;
     }
+
+    public static boolean isOtpCodeValid(String otpCode){
+
+        return otpCode!=null && otpCode.length()==6;
+    }
 }

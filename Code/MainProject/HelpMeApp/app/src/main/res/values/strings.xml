@@ -163,6 +163,10 @@
     <string name="who_needs_help">Who needs help?</string>
     <string name="nearby_posts">Nearby Posts</string>
     <string name="help_feed_location_placeholder_text">5 help posts found near Mirpur-1, Janata Housing, Dhaka-1216</string>
+    <string name="invalid_otp_code">Verification code invalid!</string>
+    <string name="unexpected_error">Sorry an unexpected error occurred!</string>
+    <string name="phone_verification_error">make sure you phone number is valid and connected to internet</string>
+    <string name="verifying">Verifying…</string>
 
 
 </resources>
