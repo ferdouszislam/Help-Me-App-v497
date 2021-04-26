@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.LoginActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.Authentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContactsSharedPref;
 
 import java.util.ArrayList;

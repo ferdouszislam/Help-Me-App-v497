@@ -3,11 +3,12 @@ package com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 
 /*
 Firebase Auth using Email & Password Integration class
  */
-public class FirebaseEmailPasswordAuthentication extends Authentication{
+public class FirebaseEmailPasswordAuthentication extends Authentication {
 
     private static final String TAG = "FEPA-debug";
 

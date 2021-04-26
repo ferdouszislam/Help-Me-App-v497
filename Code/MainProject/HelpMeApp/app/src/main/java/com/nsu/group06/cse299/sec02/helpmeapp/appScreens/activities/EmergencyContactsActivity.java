@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.Authentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
