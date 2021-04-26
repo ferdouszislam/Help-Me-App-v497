@@ -55,10 +55,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".appScreens.activities.SignupActivity"
+            android:name=".appScreens.unused_activities.SignupActivity"
             android:label="@string/sign_up_title" />
         <activity
-            android:name=".appScreens.activities.LoginActivity"
+            android:name=".appScreens.unused_activities.LoginActivity"
             android:label="@string/login_title" />
         <activity
             android:name=".appScreens.activities.HomeActivity"
