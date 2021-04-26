@@ -183,6 +183,11 @@ public class EmergencyContactsActivity extends AppCompatActivity
                             }
 
                             @Override
+                            public void onReadDataNotFound() {
+                                // not reading anything
+                            }
+
+                            @Override
                             public void onDatabaseOperationSuccess() {
                                 // not required in this case
                             }

@@ -66,6 +66,11 @@ public class SignupActivity extends AppCompatActivity {
                 }
 
                 @Override
+                public void onReadDataNotFound() {
+                    // not reading any data, keep this empty
+                }
+
+                @Override
                 public void onDatabaseOperationSuccess() {
 
                     startActivity(new Intent(SignupActivity.this, HomeActivity.class));

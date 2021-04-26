@@ -67,6 +67,11 @@ public class SetupProfileActivity extends AppCompatActivity {
                 }
 
                 @Override
+                public void onReadDataNotFound() {
+                    // TODO: is any implementation needed here?
+                }
+
+                @Override
                 public void onDatabaseOperationSuccess() {
                     // not required
                     databaseOperationCompleteUI();

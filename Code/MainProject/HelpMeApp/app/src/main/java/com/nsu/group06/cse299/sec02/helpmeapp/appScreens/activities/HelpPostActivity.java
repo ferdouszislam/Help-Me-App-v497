@@ -202,7 +202,12 @@ public class HelpPostActivity extends AppCompatActivity {
             new Database.SingleOperationDatabase.SingleOperationDatabaseCallback<HelpPost>() {
                 @Override
                 public void onDataRead(HelpPost data) {
-                    // keep black, no reading anything
+                    // keep black, not reading anything
+                }
+
+                @Override
+                public void onReadDataNotFound() {
+                    // keep black, not reading anything
                 }
 
                 @Override

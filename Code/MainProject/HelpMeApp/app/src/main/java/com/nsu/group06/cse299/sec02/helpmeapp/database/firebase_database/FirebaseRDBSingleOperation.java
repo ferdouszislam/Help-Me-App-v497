@@ -86,7 +86,7 @@ public class FirebaseRDBSingleOperation<T> extends Database.SingleOperationDatab
                     singleOperationDatabaseCallback.onDatabaseOperationSuccess();
                 }
 
-                else singleOperationDatabaseCallback.onDatabaseOperationFailed("data not found");
+                else singleOperationDatabaseCallback.onReadDataNotFound();
             }
 
             @Override

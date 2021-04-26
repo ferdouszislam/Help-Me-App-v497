@@ -184,6 +184,11 @@ public class EmergencyContactsAdapter extends RecyclerView.Adapter<EmergencyCont
                             }
 
                             @Override
+                            public void onReadDataNotFound() {
+                                // not reading anything
+                            }
+
+                            @Override
                             public void onDatabaseOperationSuccess() {
                                 // should reflect in the recycler view automatically
                             }

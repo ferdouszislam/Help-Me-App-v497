@@ -49,6 +49,14 @@ public class SingleHelpPostActivity extends AppCompatActivity {
                 }
 
                 @Override
+                public void onReadDataNotFound() {
+
+                    failedToLoadHelpPostUI();
+
+                    Log.d(TAG, "onDatabaseOperationFailed: help post not found in database");
+                }
+
+                @Override
                 public void onDatabaseOperationSuccess() {
                     // kept blank intentionally
                 }

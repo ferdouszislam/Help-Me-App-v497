@@ -33,6 +33,7 @@ public interface Database {
         public interface SingleOperationDatabaseCallback<T> extends StatusUpdate{
 
             void onDataRead(T data);
+            void onReadDataNotFound();
         }
 
         public SingleOperationDatabaseCallback getSingleOperationDatabaseCallback() {
