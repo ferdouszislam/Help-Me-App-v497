@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.LoginActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.EnterPhoneNumberActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContactsSharedPref;
 
@@ -30,7 +30,7 @@ public class SessionUtils {
         // clear out shared preferences
         clearSharedPreferences(context);
 
-        Intent intent = new Intent(context, LoginActivity.class);
+        Intent intent = new Intent(context, EnterPhoneNumberActivity.class);
 
         // clear out all activities on the back stack and open LoginActivity
         // so that back press from this point on closes the app

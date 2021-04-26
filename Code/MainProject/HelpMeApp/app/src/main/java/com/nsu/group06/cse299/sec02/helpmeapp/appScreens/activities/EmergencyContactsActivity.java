@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.EnterPhoneNumberActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
@@ -124,7 +125,7 @@ public class EmergencyContactsActivity extends AppCompatActivity
 
         mAuth.signOut();
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, EnterPhoneNumberActivity.class);
 
         // clear out all activities on the back stack and open LoginActivity
         // so that back press from this point on closes the app
