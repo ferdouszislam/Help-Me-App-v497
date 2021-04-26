@@ -2,13 +2,11 @@ package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.FirebaseEmailPasswordAuthentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
 
 public class SettingsActivity extends AppCompatActivity {

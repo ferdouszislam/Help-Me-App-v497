@@ -1,4 +1,4 @@
-package com.nsu.group06.cse299.sec02.helpmeapp.auth;
+package com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth;
 
 /*
     Abstraction for user signUp/login authentication classes
