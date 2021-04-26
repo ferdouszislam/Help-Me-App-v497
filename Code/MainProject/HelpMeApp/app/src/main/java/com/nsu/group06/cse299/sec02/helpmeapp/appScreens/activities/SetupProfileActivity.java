@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBSingleOperation;
@@ -102,7 +102,7 @@ public class SetupProfileActivity extends AppCompatActivity {
         mUser = new User();
 
         // authenticate user, because we need uid here
-        mAuth = new FirebaseEmailPasswordAuthentication(mAuthenticationCallbacks);
+        mAuth = new FirebasePhoneAuth(mAuthenticationCallbacks);
         mAuth.authenticateUser();
     }
 

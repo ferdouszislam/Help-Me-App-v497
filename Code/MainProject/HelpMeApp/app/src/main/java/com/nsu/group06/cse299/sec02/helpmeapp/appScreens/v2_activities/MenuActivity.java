@@ -10,7 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.SettingsActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.SetupProfileActivity;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
 
 public class MenuActivity extends InternetAlertActivity {
@@ -54,7 +54,7 @@ public class MenuActivity extends InternetAlertActivity {
 
     public void logoutClick(View view) {
 
-        SessionUtils.logout(this, new FirebaseEmailPasswordAuthentication());
+        SessionUtils.logout(this, new FirebasePhoneAuth(null));
     }
 
     @Override

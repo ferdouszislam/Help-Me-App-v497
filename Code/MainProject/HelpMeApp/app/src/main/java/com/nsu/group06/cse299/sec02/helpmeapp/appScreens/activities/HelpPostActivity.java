@@ -32,7 +32,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
-import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBSingleOperation;
@@ -314,7 +314,7 @@ public class HelpPostActivity extends AppCompatActivity {
         mHelpPost = new HelpPost();
         mHelpPost.setAuthor("anonymous");
 
-        mAuth = new FirebaseEmailPasswordAuthentication();
+        mAuth = new FirebasePhoneAuth(mAuthCallbacks);
 
         mImageWasCaptured = false;
 
@@ -332,20 +332,10 @@ public class HelpPostActivity extends AppCompatActivity {
         mHelpPostSmsSendDone = false;
         mHelpPostSmsSendDone = false;
 
-        authenticateUserLoginState(mAuth, mAuthCallbacks);
+        // authenticate if user is logged in
+        mAuth.authenticateUser();
 
         getSmsPermission();
-    }
-
-    /**
-     * authenticate if user is logged in
-     * @param auth authenticator object
-     * @param authCallbacks authentication sucess/failure callback
-     */
-    private void authenticateUserLoginState(Authentication auth, Authentication.AuthenticationCallbacks authCallbacks) {
-
-        auth.setmAuthenticationCallbacks(authCallbacks);
-        auth.authenticateUser();
     }
 
     /*
