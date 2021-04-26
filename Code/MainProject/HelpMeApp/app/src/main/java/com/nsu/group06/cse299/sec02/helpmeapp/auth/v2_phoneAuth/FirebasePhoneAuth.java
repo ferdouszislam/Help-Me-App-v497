@@ -1,5 +1,6 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth;
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,8 @@ public class FirebasePhoneAuth extends PhoneAuth {
     private static final String TAG = "FPA-debug";
 
     // firebase auth variables
-    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+    private Activity mCallingActivity;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 
@@ -77,17 +79,22 @@ public class FirebasePhoneAuth extends PhoneAuth {
                 }
             };
 
+    /**
+     * constructor called for only authentication, i.e login status check
+     * @param mAuthenticationCallbacks callback for authentication status
+     */
     public FirebasePhoneAuth(AuthenticationCallbacks mAuthenticationCallbacks) {
         super(mAuthenticationCallbacks);
     }
 
     /**
-     * constructor called
+     * constructor called for phone verification
      * @param mPhoneAuthUser model for user with phone number
      * @param mPhoneAuthCallback callback for verification via phone number
      */
-    public FirebasePhoneAuth(PhoneAuthUser mPhoneAuthUser, PhoneAuthCallback mPhoneAuthCallback) {
+    public FirebasePhoneAuth(PhoneAuthUser mPhoneAuthUser, PhoneAuthCallback mPhoneAuthCallback, Activity activity) {
         super(mPhoneAuthUser, mPhoneAuthCallback);
+        mCallingActivity = activity;
     }
 
     /**
@@ -138,7 +145,7 @@ public class FirebasePhoneAuth extends PhoneAuth {
                 PhoneAuthOptions.newBuilder(mFirebaseAuth)
                         .setPhoneNumber(phoneNumber)       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        //.setActivity(this)                 // Activity (for callback binding)
+                        .setActivity(mCallingActivity)                 // Activity (for callback binding)
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
 
@@ -167,7 +174,10 @@ public class FirebasePhoneAuth extends PhoneAuth {
     @Override
     public void authenticateUser() {
 
-        if(mFirebaseAuth!=null){
+        if(mFirebaseAuth.getCurrentUser()!=null){
+
+            if(mPhoneAuthUser==null) mPhoneAuthUser = new PhoneAuthUser();
+
             mPhoneAuthUser.setmUid(mFirebaseAuth.getUid());
 
             try{

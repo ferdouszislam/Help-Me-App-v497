@@ -9,6 +9,9 @@ public class PhoneAuthUser extends AuthenticationUser {
 
     private String phoneNumber;
 
+    public PhoneAuthUser() {
+    }
+
     public PhoneAuthUser(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
