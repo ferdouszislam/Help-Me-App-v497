@@ -15,6 +15,12 @@ import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.PhoneAuth;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.PhoneAuthUser;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBSingleOperation;
+import com.nsu.group06.cse299.sec02.helpmeapp.models.User;
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.UserInputValidator;
 
 public class EnterOTPCodeActivity extends AppCompatActivity {
@@ -27,6 +33,7 @@ public class EnterOTPCodeActivity extends AppCompatActivity {
 
     // model
     private PhoneAuthUser mPhoneAuthUser;
+    private User mUser;
 
     // phone authentication variables
     private PhoneAuth mPhoneAuth;
@@ -34,7 +41,11 @@ public class EnterOTPCodeActivity extends AppCompatActivity {
         @Override
         public void onPhoneVerificationSuccess(PhoneAuthUser phoneAuthUser) {
 
-            openHomeActivity();
+            mPhoneAuthUser = phoneAuthUser;
+            mUser.setPhoneNumber(phoneAuthUser.getPhoneNumber());
+            mUser.setUid(phoneAuthUser.getmUid());
+
+            checkIfUserDataExistsInDatabase(mUser);
         }
 
         @Override
@@ -59,6 +70,66 @@ public class EnterOTPCodeActivity extends AppCompatActivity {
     };
 
     // database variables
+    private Database.SingleOperationDatabase<User> mSingleOperationDatabase;
+    private FirebaseRDBApiEndPoint mApiEndPoint;
+    private Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User> mCreateUserSingleOperationDatabaseCallback =
+            new Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User>() {
+                @Override
+                public void onDataRead(User data) {
+                    // not reading anything keep empty
+                }
+
+                @Override
+                public void onReadDataNotFound() {
+                    // not reading anything keep empty
+                }
+
+                @Override
+                public void onDatabaseOperationSuccess() {
+
+                    openHomeActivity();
+
+                    Log.d(TAG, "onDatabaseOperationSuccess: create user database operation success!");
+                }
+
+                @Override
+                public void onDatabaseOperationFailed(String message) {
+                    // very unusual if this method gets called!
+                    // if authentication was a success it is very unlikely that any database operation will fail.
+                    Log.d(TAG, "onDatabaseOperationFailed: failed to store newly registered user information in database -> "+message);
+                    // TODO: delete the authentication information of the user from Auth system!
+                }
+            };
+    private Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User> mCheckUserExistenceCallback =
+            new Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User>() {
+                @Override
+                public void onDataRead(User data) {
+
+                    // user exists
+                    mUser = data;
+                    openHomeActivity();
+                }
+
+                @Override
+                public void onReadDataNotFound() {
+
+                    storeUserInformationInDatabase();
+                }
+
+                @Override
+                public void onDatabaseOperationSuccess() {
+                    Log.d(TAG, "onDatabaseOperationSuccess: check user existence database opearation success");
+                }
+
+                @Override
+                public void onDatabaseOperationFailed(String message) {
+                    // very unusual if this method gets called!
+                    // if authentication was a success it is very unlikely that any database operation will fail.
+                    Log.d(TAG, "onDatabaseOperationFailed: user existence check failed-> "+message);
+
+                    SessionUtils.logout(EnterOTPCodeActivity.this, mPhoneAuth);
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +146,38 @@ public class EnterOTPCodeActivity extends AppCompatActivity {
 
         String phoneNumber = getIntent().getStringExtra(EnterPhoneNumberActivity.PHONE_NUMBER_KEY);
         mPhoneAuthUser = new PhoneAuthUser(phoneNumber);
+        mUser = new User();
 
         mPhoneAuth = new FirebasePhoneAuth(mPhoneAuthUser, mPhoneAuthCallback, this);
         mPhoneAuth.sendOtpCodeTo(mPhoneAuthUser.getPhoneNumber());
+    }
+
+    /**
+     * check database to see if user data exists
+     * if exists then user has signed up before, else this is the first time
+     * @param user user model
+     */
+    private void checkIfUserDataExistsInDatabase(User user) {
+
+        mApiEndPoint = new FirebaseRDBApiEndPoint("/"+ NosqlDatabasePathUtils.USER_NODE+":"+user.getUid());
+
+        mSingleOperationDatabase
+                = new FirebaseRDBSingleOperation<>(User.class, mApiEndPoint, mCheckUserExistenceCallback);
+
+        mSingleOperationDatabase.readSingle();
+    }
+
+    /**
+     * store User information(just the phone number) into database
+     */
+    private void storeUserInformationInDatabase(){
+
+        mApiEndPoint = new FirebaseRDBApiEndPoint("/"+ NosqlDatabasePathUtils.USER_NODE);
+
+        mSingleOperationDatabase =
+                new FirebaseRDBSingleOperation<>(User.class, mApiEndPoint, mCreateUserSingleOperationDatabaseCallback);
+
+        mSingleOperationDatabase.createWithId(mUser.getUid(), mUser);
     }
 
     // onClick methods
