@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.EnterPhoneNumberActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.previousAuth.FirebaseEmailPasswordAuthentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
 import com.rbddevs.splashy.Splashy;
 
 /**
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        mAuth = new FirebaseEmailPasswordAuthentication(new Authentication.AuthenticationCallbacks() {
+        mAuth = new FirebasePhoneAuth(new Authentication.AuthenticationCallbacks() {
             @Override
             public void onAuthenticationSuccess(AuthenticationUser user) {
 
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public void continueClick(View view) {
 
         // user needs to login or signup
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        startActivity(new Intent(MainActivity.this, EnterPhoneNumberActivity.class));
 
         // disable going back to MainActivity
         finish();
