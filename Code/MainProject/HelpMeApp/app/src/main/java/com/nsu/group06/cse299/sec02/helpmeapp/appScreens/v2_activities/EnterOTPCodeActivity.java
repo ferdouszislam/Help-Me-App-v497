@@ -58,6 +58,8 @@ public class EnterOTPCodeActivity extends AppCompatActivity {
         }
     };
 
+    // database variables
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +116,12 @@ public class EnterOTPCodeActivity extends AppCompatActivity {
     // ui methods
     private void openHomeActivity() {
 
-        startActivity(new Intent(this, HomeActivity.class));
+        Intent intent = new Intent(this, HomeActivity.class);
+        // clear out all activities on the back stack and open LoginActivity
+        // so that back press from this point on closes the app
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
         verificationProcessCompleteUI();
     }
 
