@@ -1,7 +1,11 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
@@ -16,6 +26,9 @@ import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAut
 import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBSingleOperation;
+import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
+import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
+import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.models.User;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
@@ -27,10 +40,12 @@ public class SetupProfileActivity extends AppCompatActivity {
 
     // ui
     private EditText mUsernameEditText; //mDateOfBirhtEditText, mAddressEditText, mPhoneNumberEditText;
-    private Button mSaveButton;
+    private Button mSaveButton, mFetchHomeLocationButton;
+
 
     // model
     private User mUser;
+
 
     // variable used for fetching user uid
     private Authentication mAuth;
@@ -40,8 +55,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
             mUser.setUid(user.getmUid());
 
-            // setup database variables
-            initDatabaseVars();
+            initDatabaseVars(); // DO NOT TOUCH THIS LINE
 
             loadUserProfileInformation();
         }
@@ -58,6 +72,7 @@ public class SetupProfileActivity extends AppCompatActivity {
     private boolean mSaveButtonWasClicked = false;
     // variables to read/write information of users to/from the database
     private Database.SingleOperationDatabase<User> mUserInfoFirebaseRDBSingleOperation;
+    private FirebaseRDBApiEndPoint mUserInfoApiEndPoint;
     private Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User> mUserInfoSingleOperationDatabaseCallback =
             new Database.SingleOperationDatabase.SingleOperationDatabaseCallback<User>() {
                 @Override
@@ -87,7 +102,59 @@ public class SetupProfileActivity extends AppCompatActivity {
                 }
             };
 
-    private FirebaseRDBApiEndPoint mUserInfoApiEndPoint;
+
+    // variables used to fetch location
+    private FetchedLocation mFetchedLocation;
+    private LocationFetcher mLocationFetcher;
+    private LocationFetcher.LocationSettingsSetupListener mLocationSettingsSetupListener =
+            new LocationFetcher.LocationSettingsSetupListener() {
+                @Override
+                public void onLocationSettingsSetupSuccess() {
+
+                    mLocationFetcher.startLocationUpdate();
+                }
+
+                @Override
+                public void onLocationSettingsSetupFailed(String message) {
+                    // user will be automatically be asked to enable location settings
+                    // see method in SetupProfileActivity: 'onActivityResult(...)'
+                    Log.d(TAG, "onLocationSettingsSetupFailed: location settings setup failed ->" + message);
+                }
+            };
+    private LocationFetcher.LocationUpdateListener mLocationUpdateListener =
+            new LocationFetcher.LocationUpdateListener() {
+                @Override
+                public void onNewLocationUpdate(FetchedLocation fetchedLocation) {
+
+                    if(mFetchedLocation==null || mFetchedLocation.getmAccuracy() > fetchedLocation.getmAccuracy()
+                            || FetchedLocation.isLocationSignificantlyDifferent(mFetchedLocation, fetchedLocation)) {
+
+                        if(mFetchedLocation==null) fetchLocationSuccessUI();
+
+                        mFetchedLocation = fetchedLocation;
+                    }
+
+                    Log.d(TAG, "onNewLocationUpdate: location -> "+fetchedLocation.toString());
+                }
+
+                @Override
+                public void onPermissionNotGranted() {
+
+                    fetchLocationFailedUI();
+                    mLocationFetcher.stopLocationUpdate();
+
+                    Log.d(TAG, "onPermissionNotGranted: location permission not granted");
+                }
+
+                @Override
+                public void onError(String message) {
+
+                    if(mFetchedLocation==null) fetchLocationFailedUI();
+                    mLocationFetcher.stopLocationUpdate();
+
+                    Log.d(TAG, "onError: location update error -> "+message);
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +164,38 @@ public class SetupProfileActivity extends AppCompatActivity {
         init();
     }
 
+    /*
+    Required for reacting to user response when setting up required location settings
+    user response to default "turn on location" dialog is handled through this method
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+
+            case LocationFetcher.REQUEST_CHECK_LOCATION_SETTINGS:
+
+                if(resultCode==RESULT_OK){
+                    // user enabled location settings
+                    mLocationFetcher.startLocationUpdate();
+                }
+
+                else{
+                    // location settings not met
+                    showLocationSettingsExplanationDialog();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(mLocationFetcher!=null) mLocationFetcher.stopLocationUpdate();
+    }
+
     private void init() {
 
         mUsernameEditText = findViewById(R.id.username_setupProfile_EditText);
@@ -104,12 +203,20 @@ public class SetupProfileActivity extends AppCompatActivity {
         //mAddressEditText = findViewById(R.id.address_setupProfile_EditText);
         //mPhoneNumberEditText = findViewById(R.id.phoneNumber_setupProfile_EditText);
         mSaveButton = findViewById(R.id.btn_setupProfile_save);
+        mFetchHomeLocationButton = findViewById(R.id.activity_setup_profile_fetchHomeAddressButton);
 
         mUser = new User();
 
         // authenticate user, because we need uid here
         mAuth = new FirebasePhoneAuth(mAuthenticationCallbacks);
         mAuth.authenticateUser();
+
+        // location fetcher
+        mLocationFetcher = new FusedLocationFetcherApiAdapter(
+                1000, this,
+                mLocationSettingsSetupListener,
+                mLocationUpdateListener
+        );
     }
 
     /*
@@ -122,7 +229,7 @@ public class SetupProfileActivity extends AppCompatActivity {
                         ":" + mUser.getUid());
 
         mUserInfoFirebaseRDBSingleOperation =
-                new FirebaseRDBSingleOperation(User.class, mUserInfoApiEndPoint, mUserInfoSingleOperationDatabaseCallback);
+                new FirebaseRDBSingleOperation<>(User.class, mUserInfoApiEndPoint, mUserInfoSingleOperationDatabaseCallback);
     }
 
     /*
@@ -199,9 +306,10 @@ public class SetupProfileActivity extends AppCompatActivity {
         if(!isValid) return false;
 
         if(mUser.getUsername().equals(name)
-                //&& mUser.getDateOfBirth().equals(dateOfBirth)
-                //&& mUser.getAddress().equals(address)
-                //&& mUser.getPhoneNumber().equals(phoneNumber)
+             && mFetchedLocation==null
+            //&& mUser.getDateOfBirth().equals(dateOfBirth)
+            //&& mUser.getAddress().equals(address)
+            //&& mUser.getPhoneNumber().equals(phoneNumber)
         ){
             // user profile data was not changed
             return false;
@@ -212,7 +320,57 @@ public class SetupProfileActivity extends AppCompatActivity {
         //mUser.setAddress(address);
         //mUser.setPhoneNumber(phoneNumber);
 
+        if(mFetchedLocation!=null){
+
+            mUser.setHomeAddressLatitude(mFetchedLocation.getmLatitude());
+            mUser.setHomeAddressLongitude(mFetchedLocation.getmLongitude());
+        }
+
         return true;
+    }
+
+    /*
+    "fetch current location" button click
+     */
+    public void fetchCurrentLocationAsHomeAddressClick(View view) {
+
+        fetchLocationInProgressUI();
+        getCurrentLocationAsHome();
+    }
+
+    private void getCurrentLocationAsHome() {
+
+        getLocationPermissions();
+    }
+
+    /*
+    Ask for location access permission
+    using the open source library- <https://github.com/Karumi/Dexter>
+     */
+    private void getLocationPermissions() {
+
+        Dexter.withContext(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+
+                        mLocationFetcher.setupLocationSettings(SetupProfileActivity.this);
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+
+                        showLocationPermissionExplanationDialog(permissionDeniedResponse.isPermanentlyDenied());
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                        // ignore for now
+                        permissionToken.continuePermissionRequest();
+                    }
+                })
+                .check();
     }
 
     /*
@@ -261,6 +419,74 @@ public class SetupProfileActivity extends AppCompatActivity {
         //mDateOfBirhtEditText.setEnabled(true);
         //mAddressEditText.setEnabled(true);
         //mPhoneNumberEditText.setEnabled(true);
+    }
+
+    private void fetchLocationInProgressUI(){
+
+        mFetchHomeLocationButton.setText(getString(R.string.fetching_location));
+        mFetchHomeLocationButton.setEnabled(false);
+    }
+
+
+    private void fetchLocationSuccessUI(){
+
+        mFetchHomeLocationButton.setText(getString(R.string.home_address_taken));
+    }
+
+
+    private void fetchLocationFailedUI(){
+
+        showToast(getString(R.string.location_fetch_failed));
+        mFetchHomeLocationButton.setEnabled(true);
+        mFetchHomeLocationButton.setText(getString(R.string.fetch_my_current_location_as_home_address));
+    }
+
+    /*
+    show alert dialog explaining why location settings MUST be enabled
+    courtesy - <https://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+     */
+    private void showLocationSettingsExplanationDialog() {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        String title = getString(R.string.location_settings);
+        String explanation = getString(R.string.location_settings_explanation);
+
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(explanation);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
+                (dialog, which) -> mLocationFetcher.setupLocationSettings(this));
+
+        alertDialog.show();
+    }
+    /*
+    show alert dialog explaining why location permission is a MUST
+    with a simple dialog, quit activity if permission is permanently denied
+    courtesy - <https://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+     */
+    private void showLocationPermissionExplanationDialog(boolean isPermissionPermanentlyDenied) {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        String title = getString(R.string.location_permission);
+        String explanation;
+
+        if(isPermissionPermanentlyDenied)
+            explanation = getString(R.string.location_permission_permanantely_denied_explanation);
+        else
+            explanation = getString(R.string.location_permission_explanation);
+
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(explanation);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
+                (dialog, which) -> {
+                    if(!isPermissionPermanentlyDenied)
+                        getLocationPermissions();
+                    else
+                        finish();
+                });
+
+        alertDialog.show();
     }
 
     private void showToast(String message){

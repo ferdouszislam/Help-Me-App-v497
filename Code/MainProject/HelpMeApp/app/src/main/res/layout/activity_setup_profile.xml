@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".appScreens.activities.SetupProfileActivity">
 
     <LinearLayout
         android:id="@+id/header"
@@ -67,7 +69,7 @@
             android:paddingBottom="20dp" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/activity_setup_profile_fetchHomeAddressButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -77,8 +79,9 @@
             android:drawableStart="@drawable/ic_location"
             android:drawablePadding="4dp"
             android:fontFamily="@font/segoebold"
+            android:onClick="fetchCurrentLocationAsHomeAddressClick"
             android:padding="16dp"
-            android:text="Fetch my current location as Home Address"
+            android:text="@string/fetch_my_current_location_as_home_address"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/dark_blue_v2" />
