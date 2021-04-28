@@ -14,6 +14,8 @@ public class User {
     private String address = "";
     private String phoneNumber = "";
 
+    private double homeAddressLatitude, homeAddressLongitude;
+
     public User() {
         /*
         no parameter constructor is required to store objects in firebase
@@ -70,5 +72,21 @@ public class User {
 
     public void setPhoneNumber(String mPhoneNumber) {
         this.phoneNumber = mPhoneNumber;
+    }
+
+    public double getHomeAddressLatitude() {
+        return homeAddressLatitude;
+    }
+
+    public void setHomeAddressLatitude(double homeAddressLatitude) {
+        this.homeAddressLatitude = homeAddressLatitude;
+    }
+
+    public double getHomeAddressLongitude() {
+        return homeAddressLongitude;
+    }
+
+    public void setHomeAddressLongitude(double homeAddressLongitude) {
+        this.homeAddressLongitude = homeAddressLongitude;
     }
 }

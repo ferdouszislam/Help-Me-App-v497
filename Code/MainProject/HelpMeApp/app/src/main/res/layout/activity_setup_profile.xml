@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,11 +7,11 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start|center_vertical"
-        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
-        android:layout_alignParentTop="true">
+        android:gravity="start|center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -67,23 +66,22 @@
             android:paddingEnd="10dp"
             android:paddingBottom="20dp" />
 
-        <EditText
-            android:id="@+id/address_setupProfile_EditText"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/custom_edittext"
+            android:background="@color/light_blue_v2"
             android:drawableStart="@drawable/ic_location"
-            android:drawablePadding="16dp"
-            android:fontFamily="@font/segoeui"
-            android:hint="@string/address"
-            android:importantForAutofill="no"
-            android:inputType="text|textNoSuggestions|textMultiLine"
-            android:padding="24dp"
-            android:textAlignment="viewStart" />
+            android:drawablePadding="4dp"
+            android:fontFamily="@font/segoebold"
+            android:padding="16dp"
+            android:text="Fetch my current location as Home Address"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_blue_v2" />
 
         <TextView
             android:layout_width="match_parent"
@@ -92,7 +90,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="24dp"
-            android:fontFamily="@font/segoebold"
+            android:fontFamily="@font/segoeui"
             android:paddingStart="8dp"
             android:paddingTop="4dp"
             android:paddingEnd="8dp"

@@ -26,7 +26,7 @@ public class SetupProfileActivity extends AppCompatActivity {
     private static final String TAG = "SPA-debug";
 
     // ui
-    private EditText mUsernameEditText, /*mDateOfBirhtEditText,*/ mAddressEditText/*, mPhoneNumberEditText*/;
+    private EditText mUsernameEditText; //mDateOfBirhtEditText, mAddressEditText, mPhoneNumberEditText;
     private Button mSaveButton;
 
     // model
@@ -101,7 +101,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         mUsernameEditText = findViewById(R.id.username_setupProfile_EditText);
         //mDateOfBirhtEditText = findViewById(R.id.dateOfBirth_setupProfile_EditText);
-        mAddressEditText = findViewById(R.id.address_setupProfile_EditText);
+        //mAddressEditText = findViewById(R.id.address_setupProfile_EditText);
         //mPhoneNumberEditText = findViewById(R.id.phoneNumber_setupProfile_EditText);
         mSaveButton = findViewById(R.id.btn_setupProfile_save);
 
@@ -141,7 +141,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         mUsernameEditText.setText(mUser.getUsername());
         //mDateOfBirhtEditText.setText(mUser.getDateOfBirth());
-        mAddressEditText.setText(mUser.getAddress());
+        //mAddressEditText.setText(mUser.getAddress());
         //mPhoneNumberEditText.setText(mUser.getPhoneNumber());
     }
 
@@ -168,7 +168,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         String name = mUsernameEditText.getText().toString();
         //String dateOfBirth = mDateOfBirhtEditText.getText().toString();
-        String address = mAddressEditText.getText().toString();
+        //String address = mAddressEditText.getText().toString();
         //String phoneNumber = mPhoneNumberEditText.getText().toString();
         //if(phoneNumber.charAt(0)=='0') phoneNumber = "+88" + phoneNumber;
 
@@ -181,7 +181,7 @@ public class SetupProfileActivity extends AppCompatActivity {
             mDateOfBirhtEditText.setError(getString(R.string.invalid_date_of_birth));
             isValid = false;
         }
-        */
+
         if(!UserInputValidator.isAddressValid(address)){
             // address input is optional
 
@@ -189,7 +189,7 @@ public class SetupProfileActivity extends AppCompatActivity {
             //mAddressEditText.setError(getString(R.string.invalid_address));
             //isValid = false;
         }
-        /*
+
         if(!UserInputValidator.isPhoneNumberValid(phoneNumber)){
             mPhoneNumberEditText.setError(getString(R.string.invalid_phone_number));
             isValid = false;
@@ -200,7 +200,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         if(mUser.getUsername().equals(name)
                 //&& mUser.getDateOfBirth().equals(dateOfBirth)
-                && mUser.getAddress().equals(address)
+                //&& mUser.getAddress().equals(address)
                 //&& mUser.getPhoneNumber().equals(phoneNumber)
         ){
             // user profile data was not changed
@@ -209,7 +209,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         mUser.setUsername(name);
         //mUser.setDateOfBirth(dateOfBirth);
-        mUser.setAddress(address);
+        //mUser.setAddress(address);
         //mUser.setPhoneNumber(phoneNumber);
 
         return true;
@@ -225,7 +225,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         mUsernameEditText.setEnabled(false);
         //mDateOfBirhtEditText.setEnabled(false);
-        mAddressEditText.setEnabled(false);
+        //mAddressEditText.setEnabled(false);
         //mPhoneNumberEditText.setEnabled(false);
     }
 
@@ -239,7 +239,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         mUsernameEditText.setEnabled(false);
         //mDateOfBirhtEditText.setEnabled(false);
-        mAddressEditText.setEnabled(false);
+        //mAddressEditText.setEnabled(false);
         //mPhoneNumberEditText.setEnabled(false);
     }
 
@@ -259,7 +259,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         mUsernameEditText.setEnabled(true);
         //mDateOfBirhtEditText.setEnabled(true);
-        mAddressEditText.setEnabled(true);
+        //mAddressEditText.setEnabled(true);
         //mPhoneNumberEditText.setEnabled(true);
     }
 
