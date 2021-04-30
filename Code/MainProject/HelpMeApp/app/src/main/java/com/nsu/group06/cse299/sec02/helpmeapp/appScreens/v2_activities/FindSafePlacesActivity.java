@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -37,7 +38,7 @@ import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 
 import java.util.ArrayList;
 
-public class FindSafePlacesActivity extends FragmentActivity implements OnMapReadyCallback {
+public class FindSafePlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "FSPA-debug";
     private static final float CLOSE_ZOOM_LEVEL = 17.5f;
@@ -199,6 +200,8 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
 
     private void init() {
 
+        mMap.setOnMarkerClickListener(this);
+
         mMarkedUnsafeLocations = new ArrayList<>();
 
         moveMapToDefaultLocation();
@@ -240,7 +243,7 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
         MarkedUnsafeLocation newMarkedUnsafeLocation = new MarkedUnsafeLocation(helpPost);
         mMarkedUnsafeLocations.add(newMarkedUnsafeLocation);
         // add marker for the newMarkedUnsafeLocation to the map
-        showUnsafeLocationMarkerInMap(newMarkedUnsafeLocation);
+        showUnsafeLocationMarkerInMap(newMarkedUnsafeLocation, mMarkedUnsafeLocations.size()-1);
     }
 
     /**
@@ -329,12 +332,32 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
                 .check();
     }
 
-    private void showUnsafeLocationMarkerInMap(MarkedUnsafeLocation markedUnsafeLocation) {
+    private void showUnsafeLocationMarkerInMap(MarkedUnsafeLocation markedUnsafeLocation, int markedUnsafeLocationPosition) {
 
         LatLng location = new LatLng(markedUnsafeLocation.getLatitude(), markedUnsafeLocation.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(location);
-        mMap.addMarker(markerOptions);
+
+        Marker marker = mMap.addMarker(markerOptions);
+        marker.setTag(markedUnsafeLocationPosition);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        Integer markedUnsafeLocationPos = (Integer) marker.getTag();
+
+        showDetailsOfUnsafeLocation(mMarkedUnsafeLocations.get(markedUnsafeLocationPos));
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+    }
+
+    private void showDetailsOfUnsafeLocation(MarkedUnsafeLocation markedUnsafeLocation) {
+
+        showToast(markedUnsafeLocation.getDescription());
     }
 
     private void moveMapTo(LatLng location, float zoomLevel) {
