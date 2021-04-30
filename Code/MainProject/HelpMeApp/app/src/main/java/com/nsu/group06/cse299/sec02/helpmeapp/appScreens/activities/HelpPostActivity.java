@@ -47,16 +47,14 @@ import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContact
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.RemoteStoragePathsUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.UserInputValidator;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class HelpPostActivity extends AppCompatActivity {
 
@@ -536,7 +534,7 @@ public class HelpPostActivity extends AppCompatActivity {
             mHelpPost.setLongitude(mFetchedLocation.getmLongitude());
             mHelpPost.setAltitude(mFetchedLocation.getmAltitude());
             mHelpPost.setAddress(address);
-            mHelpPost.setTimeStamp(getCurrentTime());
+            mHelpPost.setTimeStamp(TimeUtils.getCurrentTime());
 
             stopLocationUpdates(mLocationFetcher);
             if(!checkFetchedLocationAccuracy(mFetchedLocation)) showInaccurateLocationDialog();
@@ -604,19 +602,6 @@ public class HelpPostActivity extends AppCompatActivity {
     private boolean checkFetchedLocationAccuracy(FetchedLocation fetchedLocation) {
 
         return FetchedLocation.isLocationAccurateEnough(fetchedLocation);
-    }
-
-    /**
-     * get current time
-     * @return time string format- Date/Month/Year, hour:minutes:second
-     * courtesy - <https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java>
-     */
-    private String getCurrentTime() {
-
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-
-        return dateFormat.format(date);
     }
 
 
