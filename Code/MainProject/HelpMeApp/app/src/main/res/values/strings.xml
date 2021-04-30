@@ -172,6 +172,9 @@
     <string name="home_address_taken">Home address fetched</string>
     <string name="title_activity_find_safe_places">Find safe places</string>
     <string name="failed_to_get_current_location">Failed to show current location.</string>
+    <string name="unsafe_location_description_placeholder">Some description of why this location is unsafe.</string>
+    <string name="unsafe_location_time_placeholder">Between 11.00 PM - 3.00 AM</string>
+    <string name="show_nearby_posts">Show nearby posts</string>
 
 
 </resources>
