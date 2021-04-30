@@ -86,7 +86,7 @@
     <string name="ok">OK</string>
     <string name="location_permission">Location Permission</string>
     <string name="location_permission_permanantely_denied_explanation">Please allow location from for the app from your device Settings.</string>
-    <string name="location_permission_explanation">Location permission is required to fetch your current location, permission MUST be provided!</string>
+    <string name="location_permission_explanation">Location permission is absolutely required to fetch your current location.</string>
     <string name="invalid_description">invalid description</string>
     <string name="location_is_innaccurate">Location is innacurate. Do you want retry fetching location?</string>
     <string name="retry">Retry</string>
@@ -171,6 +171,7 @@
     <string name="fetch_my_current_location_as_home_address">Fetch my current location as Home Address</string>
     <string name="home_address_taken">Home address fetched</string>
     <string name="title_activity_find_safe_places">Find safe places</string>
+    <string name="failed_to_get_current_location">Failed to show current location.</string>
 
 
 </resources>
