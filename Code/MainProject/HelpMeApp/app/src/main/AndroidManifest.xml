@@ -2,13 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nsu.group06.cse299.sec02.helpmeapp">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the "MyLocation" functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -22,6 +28,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".appScreens.v2_activities.FindSafePlacesActivity"
+            android:label="@string/title_activity_find_safe_places"></activity>
         <activity android:name=".appScreens.v2_activities.EnterPhoneNumberActivity" />
         <activity android:name=".appScreens.v2_activities.EnterOTPCodeActivity" />
         <activity android:name=".appScreens.v2_activities.MenuActivity" />
@@ -69,14 +90,12 @@
         <activity
             android:name=".appScreens.activities.SetupProfileActivity"
             android:label="@string/setup_profile_title" />
-
         <!-- android:windowSoftInputMode="adjustPan"
         so that keyboard does not push the UI components up -->
         <activity
             android:name=".appScreens.activities.HelpPostActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/help_post_title" />
-
+            android:label="@string/help_post_title"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".appScreens.activities.SingleHelpPostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

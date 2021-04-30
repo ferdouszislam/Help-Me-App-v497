@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.FindSafePlacesActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.InternetAlertActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.MenuActivity;
 
@@ -70,7 +71,7 @@ public class HomeActivity extends InternetAlertActivity {
             return;
         }
 
-        startActivity(new Intent(this, HelpFeedActivity.class));
+        startActivity(new Intent(this, FindSafePlacesActivity.class));
     }
 
     private void showNoInternetDialog() {

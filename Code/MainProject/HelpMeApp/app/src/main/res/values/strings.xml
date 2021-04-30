@@ -170,6 +170,7 @@
     <string name="saved">Saved!</string>
     <string name="fetch_my_current_location_as_home_address">Fetch my current location as Home Address</string>
     <string name="home_address_taken">Home address fetched</string>
+    <string name="title_activity_find_safe_places">Find safe places</string>
 
 
 </resources>
