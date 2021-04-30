@@ -2,11 +2,17 @@ package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +22,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -335,11 +343,25 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     private void showUnsafeLocationMarkerInMap(MarkedUnsafeLocation markedUnsafeLocation, int markedUnsafeLocationPosition) {
 
         LatLng location = new LatLng(markedUnsafeLocation.getLatitude(), markedUnsafeLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(location);
 
-        Marker marker = mMap.addMarker(markerOptions);
+        Marker marker = mMap.addMarker(
+                new MarkerOptions()
+                        .position(location)
+                        .icon(bitmapDescriptorFromVector(this, R.drawable.ic_danger_icon)));
         marker.setTag(markedUnsafeLocationPosition);
+    }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        // xml -> bitmap [for map marker icons]
+        // courtesy-
+        // https://stackoverflow.com/questions/42365658/custom-marker-in-google-maps-in-android-with-vector-asset-icon
+
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     @Override
