@@ -1,7 +1,6 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -10,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,7 +34,7 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     private static final String TAG = "FSPA-debug";
     private static final float CLOSE_ZOOM_LEVEL = 17.5f;
     private static final float FAR_ZOOM_LEVEL = 13f;
-    private static final LatLng DEFAULT_LATLNG = new LatLng(23.777176, 90.399452);
+    private static final LatLng DEFAULT_LATLNG = new LatLng(23.777176, 90.399452); // Co-ordinates of Dhaka city
 
     private GoogleMap mMap;
 
@@ -255,5 +255,10 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    public void backPress(View view) {
+
+        finish();
     }
 }
