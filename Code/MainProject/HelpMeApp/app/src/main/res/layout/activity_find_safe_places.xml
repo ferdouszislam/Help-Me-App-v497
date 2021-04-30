@@ -59,8 +59,7 @@
         android:background="@color/light_v2"
         android:elevation="2dp"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="gone">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/activity_find_safe_places_unsafeLocationDescriptionTextView"
@@ -71,12 +70,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="8dp"
+            android:drawableStart="@drawable/ic_info_blue"
+            android:drawablePadding="8dp"
             android:fontFamily="@font/segoebold"
             android:gravity="center_vertical"
             android:padding="4dp"
-            android:text="@string/unsafe_location_description_placeholder"
-            android:drawableStart="@drawable/ic_info_blue"
-            android:drawablePadding="8dp" />
+            android:text="@string/unsafe_location_description_placeholder" />
 
         <TextView
             android:id="@+id/activity_find_safe_places_unsafeLocationTimeTextView"
