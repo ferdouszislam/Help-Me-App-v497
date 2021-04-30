@@ -25,9 +25,17 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBRealtime;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
+import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
+import com.nsu.group06.cse299.sec02.helpmeapp.models.MarkedUnsafeLocation;
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
+
+import java.util.ArrayList;
 
 public class FindSafePlacesActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -37,6 +45,51 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     private static final LatLng DEFAULT_LATLNG = new LatLng(23.777176, 90.399452); // Co-ordinates of Dhaka city
 
     private GoogleMap mMap;
+
+    // model
+    ArrayList<MarkedUnsafeLocation> mMarkedUnsafeLocations;
+
+    // variables to access database
+    private Database.RealtimeDatabase mReadHelpPostsRealtimeDatabase;
+    private FirebaseRDBApiEndPoint mApiEndPoint = new FirebaseRDBApiEndPoint("/"+ NosqlDatabasePathUtils.HELP_POSTS_NODE);
+    private Database.RealtimeDatabase.RealtimeChangesDatabaseCallback<HelpPost> mHelpPostRealtimeChangesDatabaseCallback =
+            new Database.RealtimeDatabase.RealtimeChangesDatabaseCallback<HelpPost>() {
+                @Override
+                public void onDataAddition(HelpPost data) {
+
+                    // TODO:
+                    //  put public and private posts on different nodes
+                    //  and remove this client side filtration
+                    if(!data.getIsPublic()) return;
+
+                    Log.d(TAG, "onDataAddition: data added -> "+data.toString());
+
+                    addHelpPostToMarkedLocationWiseHelpPostCollection(data);
+                }
+
+                @Override
+                public void onDataUpdate(HelpPost data) {
+
+                    updateHelpPostInMarkedLocationWiseHelpPostCollection(data);
+                }
+
+                @Override
+                public void onDataDeletion(HelpPost data) {
+
+                    removeHelpPostFromMarkedLocationWiseHelpPostCollection(data);
+                }
+
+                @Override
+                public void onDatabaseOperationSuccess() {
+
+                }
+
+                @Override
+                public void onDatabaseOperationFailed(String message) {
+
+                    failedToLoadMarkedUnsafeLocationsUI();
+                }
+            };
 
     // variables used to fetch location
     private FetchedLocation mCurrentLocation;
@@ -100,6 +153,8 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     @Override
@@ -139,11 +194,92 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        moveMapToDefaultLocation();
-
-        // this takes some time
-        moveMapToCurrentLocation();
+        init();
     }
+
+    private void init() {
+
+        mMarkedUnsafeLocations = new ArrayList<>();
+
+        moveMapToDefaultLocation();
+        moveMapToCurrentLocation(); // this takes some time
+
+        loadHelpPosts();
+    }
+
+    private void loadHelpPosts() {
+
+        mReadHelpPostsRealtimeDatabase = new FirebaseRDBRealtime<>(
+                HelpPost.class,
+                mApiEndPoint,
+                mHelpPostRealtimeChangesDatabaseCallback
+        );
+
+        mReadHelpPostsRealtimeDatabase.listenForListDataChange();
+    }
+
+    /**
+     * Add help post to marked unsafe location collection
+     * @param helpPost model class for help posts
+     */
+    private void addHelpPostToMarkedLocationWiseHelpPostCollection(HelpPost helpPost) {
+
+        int idx = -1;
+        for(MarkedUnsafeLocation markedUnsafeLocation: mMarkedUnsafeLocations) {
+
+            idx++;
+            if(markedUnsafeLocation.belongsToMarkedUnsafeLocation(helpPost)){
+
+                mMarkedUnsafeLocations.get(idx).addHelpPostToMarkedUnsafeLocation(helpPost);
+                return;
+            }
+        }
+
+        // reached here means helpPost does not belong to any existing marked unsafe locations
+        // so create a new marked unsafe location
+        MarkedUnsafeLocation newMarkedUnsafeLocation = new MarkedUnsafeLocation(helpPost);
+        mMarkedUnsafeLocations.add(newMarkedUnsafeLocation);
+        // add marker for the newMarkedUnsafeLocation to the map
+        showUnsafeLocationMarkerInMap(newMarkedUnsafeLocation);
+    }
+
+    /**
+     * Remove help post from marked unsafe location collection
+     * @param helpPost model class for help posts
+     */
+    private void removeHelpPostFromMarkedLocationWiseHelpPostCollection(HelpPost helpPost) {
+
+        int idx = -1;
+        for(MarkedUnsafeLocation markedUnsafeLocation: mMarkedUnsafeLocations) {
+
+            idx++;
+            if(markedUnsafeLocation.hasHelpPost(helpPost)){
+
+                mMarkedUnsafeLocations.get(idx).removeHelpPost(helpPost);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Find and Update help post from marked unsafe location collection
+     * @param helpPost model class for help posts
+     */
+    private void updateHelpPostInMarkedLocationWiseHelpPostCollection(HelpPost helpPost) {
+
+        int idx = -1;
+        for(MarkedUnsafeLocation markedUnsafeLocation: mMarkedUnsafeLocations) {
+
+            idx++;
+            if(markedUnsafeLocation.hasHelpPost(helpPost)){
+
+                mMarkedUnsafeLocations.get(idx).removeHelpPost(helpPost);
+                mMarkedUnsafeLocations.get(idx).addHelpPostToMarkedUnsafeLocation(helpPost);
+                break;
+            }
+        }
+    }
+
 
     private void moveMapToCurrentLocation() {
 
@@ -193,10 +329,12 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
                 .check();
     }
 
-    private void showMarketAt(LatLng location) {
+    private void showUnsafeLocationMarkerInMap(MarkedUnsafeLocation markedUnsafeLocation) {
 
-        // Add a marker in Sydney and move the camera
-        mMap.addMarker(new MarkerOptions().position(location));
+        LatLng location = new LatLng(markedUnsafeLocation.getLatitude(), markedUnsafeLocation.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(location);
+        mMap.addMarker(markerOptions);
     }
 
     private void moveMapTo(LatLng location, float zoomLevel) {
@@ -221,11 +359,16 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
         moveMapTo(DEFAULT_LATLNG, FAR_ZOOM_LEVEL);
     }
 
-    /*
-    show alert dialog explaining why location permission is a MUST
-    with a simple dialog, quit activity if permission is permanently denied
-    courtesy - <https://stackoverflow.com/questions/26097513/android-simple-alert-dialog
-     */
+    private void failedToLoadMarkedUnsafeLocationsUI() {
+
+        showToast(getString(R.string.no_internet));
+    }
+
+//    /*
+//    show alert dialog explaining why location permission is a MUST
+//    with a simple dialog, quit activity if permission is permanently denied
+//    courtesy - <https://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+//     */
 //    private void showLocationPermissionExplanationDialog(boolean isPermissionPermanentlyDenied) {
 //
 //        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
