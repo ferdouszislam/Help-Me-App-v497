@@ -16,6 +16,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,14 +48,17 @@ import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 
 import java.util.ArrayList;
 
-public class FindSafePlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class FindSafePlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
     private static final String TAG = "FSPA-debug";
     private static final float CLOSE_ZOOM_LEVEL = 17.5f;
     private static final float FAR_ZOOM_LEVEL = 13f;
     private static final LatLng DEFAULT_LATLNG = new LatLng(23.777176, 90.399452); // Co-ordinates of Dhaka city
 
+    // ui
     private GoogleMap mMap;
+    private LinearLayout mMarkerDetailsLinearLayout;
+    private TextView mUnsafeLocationDescriptionTextView, mUnsafeLocationTimeTextView;
 
     // model
     ArrayList<MarkedUnsafeLocation> mMarkedUnsafeLocations;
@@ -208,7 +213,12 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
 
     private void init() {
 
+        mMarkerDetailsLinearLayout = findViewById(R.id.activity_find_safe_places_unsafeLocationMarkerDetailsLinearLayout);
+        mUnsafeLocationDescriptionTextView = findViewById(R.id.activity_find_safe_places_unsafeLocationDescriptionTextView);
+        mUnsafeLocationTimeTextView = findViewById(R.id.activity_find_safe_places_unsafeLocationTimeTextView);
+
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
 
         mMarkedUnsafeLocations = new ArrayList<>();
 
@@ -379,7 +389,14 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
 
     private void showDetailsOfUnsafeLocation(MarkedUnsafeLocation markedUnsafeLocation) {
 
-        showToast(markedUnsafeLocation.getDescription());
+        mMarkerDetailsLinearLayout.setVisibility(View.VISIBLE);
+        mUnsafeLocationDescriptionTextView.setText(markedUnsafeLocation.getDescription());
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+        mMarkerDetailsLinearLayout.setVisibility(View.GONE);
     }
 
     private void moveMapTo(LatLng location, float zoomLevel) {
