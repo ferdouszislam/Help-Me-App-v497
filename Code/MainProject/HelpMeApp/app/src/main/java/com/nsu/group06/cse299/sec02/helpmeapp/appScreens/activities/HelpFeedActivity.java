@@ -26,6 +26,9 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
     private HelpPostsAdapter mHelpPostsAdapter;
     private LinearLayout headerLayout;
 
+    // model
+    private MarkedUnsafeLocation mMarkedUnsafeLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,19 +39,21 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
 
     private void init() {
 
-        int size = ((MarkedUnsafeLocation) getIntent().getSerializableExtra(MarkedUnsafeLocation.OBJECT_PASSING_KEY)).getmHelpPosts().size();
-        Toast.makeText(this, size+" posts nearby", Toast.LENGTH_LONG).show();
+        mMarkedUnsafeLocation =
+                (MarkedUnsafeLocation) getIntent().getSerializableExtra(MarkedUnsafeLocation.OBJECT_PASSING_KEY);
 
         mNoDataFoundTextView = findViewById(R.id.helpFeed_empty_TextView);
+        headerLayout = findViewById(R.id.header);
+
         mHelpPostsRecyclerView = findViewById(R.id.helpPosts_RecyclerView);
-        mHelpPostsAdapter = new HelpPostsAdapter(this, this);
+        mHelpPostsAdapter =
+                new HelpPostsAdapter(this, this, mMarkedUnsafeLocation.getmHelpPosts());
         mHelpPostsRecyclerView.setAdapter(mHelpPostsAdapter);
         mHelpPostsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        headerLayout = findViewById(R.id.header);
     }
 
     @Override
-    public void onFailedToLoadData() {
+    public void onError() {
 
         Toast.makeText(this, R.string.failed_to_connect, Toast.LENGTH_LONG)
                 .show();
@@ -69,7 +74,10 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
     public void onListNotEmpty() {
 
         mNoDataFoundTextView.setVisibility(View.GONE);
+
+        if(mHelpPostsRecyclerView==null) mHelpPostsRecyclerView = findViewById(R.id.helpPosts_RecyclerView);
         mHelpPostsRecyclerView.setVisibility(View.VISIBLE);
+
         headerLayout.setVisibility(View.VISIBLE);
     }
 

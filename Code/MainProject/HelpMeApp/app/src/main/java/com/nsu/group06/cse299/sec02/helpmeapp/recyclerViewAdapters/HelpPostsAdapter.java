@@ -21,6 +21,8 @@ import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class HelpPostsAdapter extends RecyclerView.Adapter<HelpPostsAdapter.ViewHolder> {
 
@@ -35,100 +37,16 @@ public class HelpPostsAdapter extends RecyclerView.Adapter<HelpPostsAdapter.View
     // model
     private ArrayList<HelpPost> mHelpPosts;
 
-    // flag to check if data list is empty or not
-    private boolean mDataListEmpty = true;
-
-    // variables to access database
-    private Database.RealtimeDatabase mReadHelpPostsRealtimeDatabase;
-    private FirebaseRDBApiEndPoint mApiEndPoint = new FirebaseRDBApiEndPoint("/"+ NosqlDatabasePathUtils.HELP_POSTS_NODE);
-    private Database.RealtimeDatabase.RealtimeChangesDatabaseCallback<HelpPost> mHelpPostRealtimeChangesDatabaseCallback =
-            new Database.RealtimeDatabase.RealtimeChangesDatabaseCallback<HelpPost>() {
-                @Override
-                public void onDataAddition(HelpPost data) {
-
-                    // TODO:
-                    //  put public and private posts on different nodes
-                    //  and remove this client side filtration
-                    if(!data.getIsPublic()) return;
-
-                    Log.d(TAG, "onDataAddition: data added -> "+data.toString());
-
-                    // add elements to top
-                    mHelpPosts.add(0, data);
-                    HelpPostsAdapter.this.notifyItemInserted(0);
-
-                    if(mDataListEmpty){
-
-                        mDataListEmpty = false;
-                        mCallerCallbacks.onListNotEmpty();
-                    }
-                }
-
-                @Override
-                public void onDataUpdate(HelpPost data) {
-
-                    int updatePosition = -1;
-                    for(int i=0; i<mHelpPosts.size(); i++) {
-
-                        if (mHelpPosts.get(i).getPostId().equals(data.getPostId())){
-
-                            updatePosition = i;
-                            break;
-                        }
-                    }
-                    if(updatePosition==-1) return;
-
-                    mHelpPosts.set(updatePosition, data);
-                    HelpPostsAdapter.this.notifyItemChanged(updatePosition);
-                }
-
-                @Override
-                public void onDataDeletion(HelpPost data) {
-
-                    int removePosition = -1;
-                    for(int i=0; i<mHelpPosts.size(); i++) {
-
-                        if (mHelpPosts.get(i).getPostId().equals(data.getPostId())){
-
-                            removePosition = i;
-                            break;
-                        }
-                    }
-                    if(removePosition==-1) return;
-
-                    mHelpPosts.remove(removePosition);
-                    HelpPostsAdapter.this.notifyItemRemoved(removePosition);
-                }
-
-                @Override
-                public void onDatabaseOperationSuccess() {
-
-                }
-
-                @Override
-                public void onDatabaseOperationFailed(String message) {
-
-                    mCallerCallbacks.onFailedToLoadData();
-                }
-            };
-
-    public HelpPostsAdapter(Context mContext, CallerCallbacks mCallerCallbacks) {
+    public HelpPostsAdapter(Context mContext, CallerCallbacks mCallerCallbacks, ArrayList<HelpPost> helpPosts) {
         this.mContext = mContext;
         this.mCallerCallbacks = mCallerCallbacks;
-        this.mHelpPosts = new ArrayList<>();
 
-        loadHelpPosts();
-    }
+        // help posts are expected to be in-> posts with earlier date first
+        // so we are reversing to get-> posts with latest date first
+        Collections.reverse(helpPosts);
+        this.mHelpPosts = helpPosts;
 
-    private void loadHelpPosts() {
-
-        mReadHelpPostsRealtimeDatabase = new FirebaseRDBRealtime<HelpPost>(
-                HelpPost.class,
-                mApiEndPoint,
-                mHelpPostRealtimeChangesDatabaseCallback
-        );
-
-        mReadHelpPostsRealtimeDatabase.listenForListDataChange();
+        if(!mHelpPosts.isEmpty()) mCallerCallbacks.onListNotEmpty();
     }
 
     @NonNull
@@ -163,24 +81,8 @@ public class HelpPostsAdapter extends RecyclerView.Adapter<HelpPostsAdapter.View
                     .error(R.drawable.ftl_image_placeholder)
                     .into(holder.photoImageView);
         }
-        /* ALL POSTS WILL CONTAIN PHOTO
-
-        else{
-            Glide.with(mContext)
-                    .load(R.drawable.no_image_placeholder)
-                    .override(300, 300)
-                    .fitCenter() // scale to fit entire image within ImageView
-                    .into(holder.photoImageView);
-        }
-         */
 
         holder.showLocationButton.setOnClickListener(v -> mCallerCallbacks.onShowLocationClick(helpPost));
-    }
-
-    public void onDestroy(){
-
-        // MUST CALL THIS TO AVOID UNNECESSARY DOWNLOAD
-        mReadHelpPostsRealtimeDatabase.stopListeningForDataChange();
     }
 
     @Override
@@ -191,9 +93,9 @@ public class HelpPostsAdapter extends RecyclerView.Adapter<HelpPostsAdapter.View
     // interface to communicate with the calling Activity/Fragment
     public interface CallerCallbacks{
 
-        void onFailedToLoadData();
         void onShowLocationClick(HelpPost helpPost);
         void onListNotEmpty();
+        void onError();
     }
 
     // Provide a direct reference to each of the views within a data item
