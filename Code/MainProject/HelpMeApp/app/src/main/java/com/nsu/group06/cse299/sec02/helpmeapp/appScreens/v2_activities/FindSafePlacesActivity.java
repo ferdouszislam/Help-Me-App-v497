@@ -44,9 +44,14 @@ import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
 import com.nsu.group06.cse299.sec02.helpmeapp.models.MarkedUnsafeLocation;
+import com.nsu.group06.cse299.sec02.helpmeapp.secretApiKey.ApiKey;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 
 import java.util.ArrayList;
+
+import barikoi.barikoilocation.BarikoiAPI;
+import barikoi.barikoilocation.PlaceModels.GeoCodePlace;
+import barikoi.barikoilocation.SearchAutoComplete.SearchAutocompleteFragment;
 
 public class FindSafePlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
@@ -222,10 +227,47 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
 
         mMarkedUnsafeLocations = new ArrayList<>();
 
+        initBariKoiSearch();
+
         moveMapToDefaultLocation();
         moveMapToCurrentLocation(); // this takes some time
 
         loadHelpPosts();
+    }
+
+    private void initBariKoiSearch() {
+
+        try {
+
+            BarikoiAPI.getINSTANCE(getApplicationContext(), ApiKey.BARIKOI_API_KEY);
+
+        } catch (Exception e) {
+
+            Log.d(TAG, "initBariKoiSearch: aaah the api key is hidden-> "+e.getMessage());
+
+            return;
+        }
+
+        SearchAutocompleteFragment searchAutocompleteFragment;
+        searchAutocompleteFragment=
+                (SearchAutocompleteFragment)getSupportFragmentManager().findFragmentById(R.id.barikoiSearchAutocompleteFragment);
+        searchAutocompleteFragment.setPlaceSelectionListener(new SearchAutocompleteFragment.PlaceSelectionListener() {
+
+            @Override
+            public void onPlaceSelected(GeoCodePlace place) {
+
+                LatLng location =
+                        new LatLng(Double.parseDouble(place.getLatitude()), Double.parseDouble(place.getLongitude()));
+
+                moveMapTo(location, CLOSE_ZOOM_LEVEL);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(FindSafePlacesActivity.this, "Error Message"+error, Toast.LENGTH_SHORT).show();
+            }
+
+        });
     }
 
     private void loadHelpPosts() {
