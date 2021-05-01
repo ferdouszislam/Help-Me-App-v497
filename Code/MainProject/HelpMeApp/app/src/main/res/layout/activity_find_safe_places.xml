@@ -106,7 +106,6 @@
             android:text="@string/unsafe_location_time_placeholder" />
 
         <Button
-            android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -117,6 +116,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/custom_gradient_color"
             android:fontFamily="@font/segoebold"
+            android:onClick="showNearbyPostsClick"
             android:padding="4dp"
             android:text="@string/show_nearby_posts"
             android:textAllCaps="false"

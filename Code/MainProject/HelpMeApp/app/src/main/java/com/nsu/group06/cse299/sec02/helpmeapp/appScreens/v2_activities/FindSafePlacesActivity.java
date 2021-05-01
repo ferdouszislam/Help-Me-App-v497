@@ -36,6 +36,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HelpFeedActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
 import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBRealtime;
@@ -66,7 +67,8 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     private TextView mUnsafeLocationDescriptionTextView, mUnsafeLocationTimeTextView;
 
     // model
-    ArrayList<MarkedUnsafeLocation> mMarkedUnsafeLocations;
+    private ArrayList<MarkedUnsafeLocation> mMarkedUnsafeLocations;
+    private int mSelectedMarkedUnsafeLocationIndex = -1;
 
     // variables to access database
     private Database.RealtimeDatabase mReadHelpPostsRealtimeDatabase;
@@ -419,9 +421,8 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Integer markedUnsafeLocationPos = (Integer) marker.getTag();
-
-        showDetailsOfUnsafeLocation(mMarkedUnsafeLocations.get(markedUnsafeLocationPos));
+        mSelectedMarkedUnsafeLocationIndex = (Integer) marker.getTag();
+        showDetailsOfUnsafeLocation(mMarkedUnsafeLocations.get(mSelectedMarkedUnsafeLocationIndex));
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
@@ -508,5 +509,17 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
     public void backPress(View view) {
 
         finish();
+    }
+
+    public void showNearbyPostsClick(View view) {
+
+        if(mSelectedMarkedUnsafeLocationIndex!=-1) {
+
+            MarkedUnsafeLocation markedUnsafeLocation = mMarkedUnsafeLocations.get(mSelectedMarkedUnsafeLocationIndex);
+
+            Intent intent = new Intent(this, HelpFeedActivity.class);
+            intent.putExtra(MarkedUnsafeLocation.OBJECT_PASSING_KEY, markedUnsafeLocation);
+            startActivity(intent);
+        }
     }
 }

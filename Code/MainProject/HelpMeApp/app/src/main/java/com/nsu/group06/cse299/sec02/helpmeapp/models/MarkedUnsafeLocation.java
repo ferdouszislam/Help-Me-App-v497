@@ -6,6 +6,7 @@ import androidx.core.util.Pair;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -13,9 +14,10 @@ import java.util.TreeSet;
 /**
  * model class for unsafe locations shown in "FindSafePlacesActivity" class
  */
-public class MarkedUnsafeLocation {
+public class MarkedUnsafeLocation implements Serializable {
 
     private static final String TAG = "MUL-debug";
+    public static final String OBJECT_PASSING_KEY = "com.nsu.group06.cse299.sec02.helpmeapp.models_MUL-opk";
 
     // minimum distance (in meters) for HelpPost to be grouped together into a MarkedUnsafeLocation
     private static final double MINIMUM_DISTANCE = 100.00d;

@@ -1,5 +1,6 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.models;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -8,7 +9,7 @@ import java.util.Date;
 /**
  * Model class for a help post
  */
-public class HelpPost {
+public class HelpPost implements Serializable {
 
     private String postId;
     private String authorId;

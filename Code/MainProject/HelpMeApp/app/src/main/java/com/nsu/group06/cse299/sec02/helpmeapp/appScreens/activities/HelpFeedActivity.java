@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
+import com.nsu.group06.cse299.sec02.helpmeapp.models.MarkedUnsafeLocation;
 import com.nsu.group06.cse299.sec02.helpmeapp.recyclerViewAdapters.EmergencyContactsAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.recyclerViewAdapters.HelpPostsAdapter;
 
@@ -34,6 +35,9 @@ public class HelpFeedActivity extends AppCompatActivity implements HelpPostsAdap
     }
 
     private void init() {
+
+        int size = ((MarkedUnsafeLocation) getIntent().getSerializableExtra(MarkedUnsafeLocation.OBJECT_PASSING_KEY)).getmHelpPosts().size();
+        Toast.makeText(this, size+" posts nearby", Toast.LENGTH_LONG).show();
 
         mNoDataFoundTextView = findViewById(R.id.helpFeed_empty_TextView);
         mHelpPostsRecyclerView = findViewById(R.id.helpPosts_RecyclerView);
