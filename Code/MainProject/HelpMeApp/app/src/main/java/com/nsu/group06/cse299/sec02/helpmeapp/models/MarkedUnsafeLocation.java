@@ -1,20 +1,29 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.models;
 
+import android.util.Log;
+
+import androidx.core.util.Pair;
+
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * model class for unsafe locations shown in "FindSafePlacesActivity" class
  */
 public class MarkedUnsafeLocation {
 
+    private static final String TAG = "MUL-debug";
+
     // minimum distance (in meters) for HelpPost to be grouped together into a MarkedUnsafeLocation
     private static final double MINIMUM_DISTANCE = 100.00d;
 
     private Double latitude, longitude;
     private String description;
-    private String beginTimeInterval, endTimeInterval; // format- 10 AM
+
+    private SortedSet<Integer> unsafeHoursSet = new TreeSet<>(); // format- 10 PM
 
     private ArrayList<HelpPost> mHelpPosts = new ArrayList<>();
 
@@ -29,8 +38,10 @@ public class MarkedUnsafeLocation {
 
         this.latitude = helpPost.getLatitude();
         this.longitude = helpPost.getLongitude();
-        this.beginTimeInterval = TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp());
-        this.endTimeInterval = TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp());
+        
+        int helpPostHour = getHourTimeAsInteger(TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp()));
+        unsafeHoursSet.add(helpPostHour);
+        
         this.description = "1 help post found nearby";
         mHelpPosts.add(helpPost);
     }
@@ -59,9 +70,6 @@ public class MarkedUnsafeLocation {
             latitude = helpPost.getLatitude();
             longitude = helpPost.getLongitude();
 
-            beginTimeInterval = TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp());
-            endTimeInterval = TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp());
-
             description = "1 help post found nearby";
 
             mHelpPosts.add(helpPost);
@@ -75,14 +83,7 @@ public class MarkedUnsafeLocation {
         }
 
         int helpPostHour = getHourTimeAsInteger(TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp()));
-
-        if(helpPostHour < getHourTimeAsInteger(beginTimeInterval)) {
-            beginTimeInterval = getFormattedHour(helpPostHour);
-        }
-
-        if(helpPostHour > getHourTimeAsInteger(endTimeInterval)) {
-            endTimeInterval = getFormattedHour(helpPostHour);
-        }
+        unsafeHoursSet.add(helpPostHour);
 
         mHelpPosts.add(helpPost);
 
@@ -103,6 +104,61 @@ public class MarkedUnsafeLocation {
         if(removeIdx>=mHelpPosts.size()) return;
 
         mHelpPosts.remove(removeIdx);
+    }
+
+    /**
+     * get time intervals from unsafeFormattedHoursSet
+     * @return time intervals as a string- '10 AM to 12 PM, 1AM to 3AM'
+     */
+    public String getTimeIntervals() {
+
+        ArrayList<Pair<Integer, Integer>> timeIntervals = new ArrayList<>();
+
+        int prevHour = -1;
+        for(Integer unsafeHour : unsafeHoursSet) {
+
+            Log.d(TAG, "getTimeIntervals: "+unsafeHour);
+
+            int currHour = unsafeHour;
+
+            if(prevHour==-1){
+
+                prevHour = currHour;
+                timeIntervals.add(new Pair<>(prevHour, -1));
+
+                continue;
+            }
+
+            if(currHour == (prevHour+1)%24){
+
+                timeIntervals.set(
+                        timeIntervals.size()-1,
+                        new Pair<>(timeIntervals.get(timeIntervals.size()-1).first, currHour)
+                );
+            }
+
+            else timeIntervals.add(new Pair<>(currHour, -1));
+
+            prevHour = currHour;
+        }
+
+        StringBuilder timeInterval = new StringBuilder("none");
+
+        for(Pair<Integer, Integer> interval : timeIntervals) {
+
+            if(timeInterval.toString().equals("none")){
+
+                if(interval.second==-1) timeInterval = new StringBuilder("" + getFormattedHour(interval.first));
+                else timeInterval = new StringBuilder(getFormattedHour(interval.first) + " - " + getFormattedHour(interval.second));
+            }
+            else{
+
+                if(interval.second==-1) timeInterval.append(", ").append(getFormattedHour(interval.first));
+                else timeInterval.append(", ").append(getFormattedHour(interval.first)).append(" - ").append(getFormattedHour(interval.second));
+            }
+        }
+
+        return timeInterval.toString();
     }
 
     /*
@@ -145,11 +201,11 @@ public class MarkedUnsafeLocation {
 
         try {
 
-            String[] parts = beginTimeInterval.split(" ");
+            String[] parts = hourTime.split(" ");
 
             int hour = Integer.parseInt(parts[0]);
 
-            if(parts[1].equals("PM") && hour!=12) hour-=12;
+            if(parts[1].equals("PM") && hour!=12) hour+=12;
 
             return hour;
 
@@ -196,22 +252,6 @@ public class MarkedUnsafeLocation {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getBeginTimeInterval() {
-        return beginTimeInterval;
-    }
-
-    public void setBeginTimeInterval(String beginTimeInterval) {
-        this.beginTimeInterval = beginTimeInterval;
-    }
-
-    public String getEndTimeInterval() {
-        return endTimeInterval;
-    }
-
-    public void setEndTimeInterval(String endTimeInterval) {
-        this.endTimeInterval = endTimeInterval;
     }
 
     public ArrayList<HelpPost> getmHelpPosts() {

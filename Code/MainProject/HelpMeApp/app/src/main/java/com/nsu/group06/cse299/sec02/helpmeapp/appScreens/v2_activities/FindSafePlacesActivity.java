@@ -391,6 +391,7 @@ public class FindSafePlacesActivity extends FragmentActivity implements OnMapRea
 
         mMarkerDetailsLinearLayout.setVisibility(View.VISIBLE);
         mUnsafeLocationDescriptionTextView.setText(markedUnsafeLocation.getDescription());
+        mUnsafeLocationTimeTextView.setText(markedUnsafeLocation.getTimeIntervals());
     }
 
     @Override
