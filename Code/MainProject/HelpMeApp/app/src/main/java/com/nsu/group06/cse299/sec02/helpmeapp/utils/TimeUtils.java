@@ -37,7 +37,7 @@ public abstract class TimeUtils {
 
         try {
             String[] date_time = timeStamp.split(" ");
-            String time = date_time[0];
+            String time = date_time[1];
             String[] hour_min_sec = time.split(":");
             String hour = hour_min_sec[0];
 
@@ -45,8 +45,8 @@ public abstract class TimeUtils {
 
             if (hour_integer >= 12) {
                 if (hour_integer > 12) hour_integer -= 12;
-                formattedHour = hour_integer + "PM";
-            } else formattedHour = hour_integer + "AM";
+                formattedHour = hour_integer + " PM";
+            } else formattedHour = hour_integer + " AM";
         } catch (Exception e) {
 
             Log.d(TAG, "getHourFromTimeStamp: error formatting timeStamp to hour-> "+ e.getMessage());
