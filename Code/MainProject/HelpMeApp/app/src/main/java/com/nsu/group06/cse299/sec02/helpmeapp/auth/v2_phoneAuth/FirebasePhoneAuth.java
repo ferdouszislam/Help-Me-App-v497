@@ -159,6 +159,7 @@ public class FirebasePhoneAuth extends PhoneAuth {
 
             mPhoneAuthCallback
                     .onPhoneVerificationFailed("mVerificationId, supposed to be provided by firebase is null!");
+            return;
         }
 
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otpCode);
