@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -30,6 +32,8 @@ import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.models.User;
+import com.nsu.group06.cse299.sec02.helpmeapp.reverseGeocoding.ReverseGeocodeApiAdapter;
+import com.nsu.group06.cse299.sec02.helpmeapp.reverseGeocoding.barikoiReverseGeo.BarikoiReverseGeocode;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.UserInputValidator;
@@ -41,6 +45,8 @@ public class SetupProfileActivity extends AppCompatActivity {
     // ui
     private EditText mUsernameEditText; //mDateOfBirhtEditText, mAddressEditText, mPhoneNumberEditText;
     private Button mSaveButton, mFetchHomeLocationButton;
+    private TextView mUserHomeAddressTextView;
+    private LinearLayout mUserHomeAddressLinearLayout;
 
 
     // model
@@ -104,7 +110,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
 
     // variables used to fetch location
-    private FetchedLocation mFetchedLocation;
+    private FetchedLocation mFetchedHomeLocation;
     private LocationFetcher mLocationFetcher;
     private LocationFetcher.LocationSettingsSetupListener mLocationSettingsSetupListener =
             new LocationFetcher.LocationSettingsSetupListener() {
@@ -126,12 +132,11 @@ public class SetupProfileActivity extends AppCompatActivity {
                 @Override
                 public void onNewLocationUpdate(FetchedLocation fetchedLocation) {
 
-                    if(mFetchedLocation==null || mFetchedLocation.getmAccuracy() > fetchedLocation.getmAccuracy()
-                            || FetchedLocation.isLocationSignificantlyDifferent(mFetchedLocation, fetchedLocation)) {
+                    if(mFetchedHomeLocation ==null || mFetchedHomeLocation.getmAccuracy() > fetchedLocation.getmAccuracy()
+                            || FetchedLocation.isLocationSignificantlyDifferent(mFetchedHomeLocation, fetchedLocation)) {
 
-                        if(mFetchedLocation==null) fetchLocationSuccessUI();
-
-                        mFetchedLocation = fetchedLocation;
+                        mFetchedHomeLocation = fetchedLocation;
+                        fetchUserHomeAddress(mFetchedHomeLocation);
                     }
 
                     Log.d(TAG, "onNewLocationUpdate: location -> "+fetchedLocation.toString());
@@ -149,12 +154,45 @@ public class SetupProfileActivity extends AppCompatActivity {
                 @Override
                 public void onError(String message) {
 
-                    if(mFetchedLocation==null) fetchLocationFailedUI();
+                    if(mFetchedHomeLocation ==null) fetchLocationFailedUI();
                     mLocationFetcher.stopLocationUpdate();
 
                     Log.d(TAG, "onError: location update error -> "+message);
                 }
             };
+
+
+    // variables for reverse geo-coding
+    private ReverseGeocodeApiAdapter mReverseGeocodeApiAdapter = null;
+    private ReverseGeocodeApiAdapter.Callback mReverseGeocodeCallback = new ReverseGeocodeApiAdapter.Callback() {
+        @Override
+        public void onSetupSuccess() {
+
+            mReverseGeocodeApiAdapter.fetchAddress(mFetchedHomeLocation.getmLatitude(), mFetchedHomeLocation.getmLongitude());
+        }
+
+        @Override
+        public void onSetupFailure(String message) {
+
+            fetchLocationFailedUI();
+            Log.d(TAG, "onSetupFailure: error-> "+message);
+        }
+
+        @Override
+        public void onAddressFetchSuccess(String address) {
+
+            showUserHomeAddress(address);
+            fetchLocationSuccessUI();
+        }
+
+        @Override
+        public void onAddressFetchError(String message) {
+
+            fetchLocationFailedUI();
+            Log.d(TAG, "onSetupFailure: error-> "+message);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +242,8 @@ public class SetupProfileActivity extends AppCompatActivity {
         //mPhoneNumberEditText = findViewById(R.id.phoneNumber_setupProfile_EditText);
         mSaveButton = findViewById(R.id.btn_setupProfile_save);
         mFetchHomeLocationButton = findViewById(R.id.activity_setup_profile_fetchHomeAddressButton);
+        mUserHomeAddressLinearLayout = findViewById(R.id.activity_setup_profile_homeAddressLinearLayout);
+        mUserHomeAddressTextView = findViewById(R.id.activity_setup_profile_homeAddressTextview);
 
         mUser = new User();
 
@@ -241,6 +281,12 @@ public class SetupProfileActivity extends AppCompatActivity {
         loadingProfileInfoUI();
     }
 
+    private void fetchUserHomeAddress(FetchedLocation mFetchedHomeLocation) {
+
+        mReverseGeocodeApiAdapter = new BarikoiReverseGeocode(mReverseGeocodeCallback, this);
+        mReverseGeocodeApiAdapter.setupApi();
+    }
+
     /*
       Show read user info from database to UI
      */
@@ -250,8 +296,22 @@ public class SetupProfileActivity extends AppCompatActivity {
         //mDateOfBirhtEditText.setText(mUser.getDateOfBirth());
         //mAddressEditText.setText(mUser.getAddress());
         //mPhoneNumberEditText.setText(mUser.getPhoneNumber());
+
+        if(mUser.getAddress()!=null && !mUser.getAddress().equals("") && !mUser.getAddress().isEmpty()) {
+
+            showUserHomeAddress(mUser.getAddress());
+        }
     }
 
+    /**
+     * Show user home address which is initially hidden
+     * @param address as a string
+     */
+    private void showUserHomeAddress(String address) {
+
+        mUserHomeAddressLinearLayout.setVisibility(View.VISIBLE);
+        mUserHomeAddressTextView.setText(address);
+    }
 
     /*
     "save profile" click listener
@@ -261,7 +321,7 @@ public class SetupProfileActivity extends AppCompatActivity {
         if(!validateInputs()) return;
 
         mSaveButtonWasClicked = true;
-        //TODO: update database
+
         mUserInfoFirebaseRDBSingleOperation.update(mUser);
         updatingProfileUI();
     }
@@ -278,6 +338,17 @@ public class SetupProfileActivity extends AppCompatActivity {
         //String address = mAddressEditText.getText().toString();
         //String phoneNumber = mPhoneNumberEditText.getText().toString();
         //if(phoneNumber.charAt(0)=='0') phoneNumber = "+88" + phoneNumber;
+        double homeLatitude, homeLongitude;
+        if(mFetchedHomeLocation==null) {
+            homeLatitude = -1;
+            homeLongitude = -1;
+        }
+        else{
+            homeLatitude = mFetchedHomeLocation.getmLatitude();
+            homeLongitude = mFetchedHomeLocation.getmLongitude();
+        }
+        String address = mUserHomeAddressTextView.getText().toString();
+        if(address==null) address = "";
 
         if(!UserInputValidator.isNameValid(name)){
             mUsernameEditText.setError(getString(R.string.invalid_username));
@@ -306,7 +377,9 @@ public class SetupProfileActivity extends AppCompatActivity {
         if(!isValid) return false;
 
         if(mUser.getUsername().equals(name)
-             && mFetchedLocation==null
+             && mUser.getHomeAddressLatitude() == homeLatitude
+             && mUser.getHomeAddressLongitude() == homeLongitude
+             && mUser.getAddress().equals(address)
             //&& mUser.getDateOfBirth().equals(dateOfBirth)
             //&& mUser.getAddress().equals(address)
             //&& mUser.getPhoneNumber().equals(phoneNumber)
@@ -319,12 +392,9 @@ public class SetupProfileActivity extends AppCompatActivity {
         //mUser.setDateOfBirth(dateOfBirth);
         //mUser.setAddress(address);
         //mUser.setPhoneNumber(phoneNumber);
-
-        if(mFetchedLocation!=null){
-
-            mUser.setHomeAddressLatitude(mFetchedLocation.getmLatitude());
-            mUser.setHomeAddressLongitude(mFetchedLocation.getmLongitude());
-        }
+        mUser.setHomeAddressLatitude(homeLatitude);
+        mUser.setHomeAddressLongitude(homeLongitude);
+        mUser.setAddress(address);
 
         return true;
     }
@@ -336,6 +406,16 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         fetchLocationInProgressUI();
         getCurrentLocationAsHome();
+    }
+
+    /**
+     * delete user's home location from database click
+     */
+    public void deleteAddressClick(View view) {
+
+        mFetchedHomeLocation = null;
+        mUserHomeAddressTextView.setText("");
+        mUserHomeAddressLinearLayout.setVisibility(View.GONE);
     }
 
     private void getCurrentLocationAsHome() {
