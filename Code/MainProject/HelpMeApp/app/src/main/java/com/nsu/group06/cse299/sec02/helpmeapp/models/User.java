@@ -14,7 +14,7 @@ public class User {
     private String address = "";
     private String phoneNumber = "";
 
-    private double homeAddressLatitude, homeAddressLongitude;
+    private double homeAddressLatitude = -1, homeAddressLongitude = -1;
 
     public User() {
         /*
