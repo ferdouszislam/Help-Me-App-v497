@@ -68,6 +68,9 @@ dependencies {
 
     // BARIKOI!!!!!!!!!!!!!!!!!!!!!
     implementation 'com.github.barikoi:BarikoiLocationLibrary:v1.2.2'
+
+    // (Java only)
+    implementation "androidx.work:work-runtime:2.5.0"
 }
 
 // ADD THIS AT THE BOTTOM for firebase
