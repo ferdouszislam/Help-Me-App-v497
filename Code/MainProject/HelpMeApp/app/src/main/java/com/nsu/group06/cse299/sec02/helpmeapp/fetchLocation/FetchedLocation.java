@@ -59,7 +59,7 @@ public class FetchedLocation {
     Returns distance in meters between two latLng points
     courtesy- <https://www.geeksforgeeks.org/program-distance-two-points-earth/>
      */
-    private static double distanceBetween(double lat1, double lat2, double lon1, double lon2)
+    public static double distanceBetween(double lat1, double lat2, double lon1, double lon2)
     {
 
         // The math module contains a function
