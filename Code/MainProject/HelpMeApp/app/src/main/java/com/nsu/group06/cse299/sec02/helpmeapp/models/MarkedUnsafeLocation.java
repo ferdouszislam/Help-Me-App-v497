@@ -41,7 +41,7 @@ public class MarkedUnsafeLocation implements Serializable {
         this.latitude = helpPost.getLatitude();
         this.longitude = helpPost.getLongitude();
         
-        int helpPostHour = getHourTimeAsInteger(TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp()));
+        int helpPostHour = getHourTimeAsInteger(TimeUtils.getFormattedHourFromTimeStamp(helpPost.getTimeStamp()));
         unsafeHoursSet.add(helpPostHour);
         
         this.description = "1 help post found nearby";
@@ -84,7 +84,7 @@ public class MarkedUnsafeLocation implements Serializable {
             return;
         }
 
-        int helpPostHour = getHourTimeAsInteger(TimeUtils.getHourFromTimeStamp(helpPost.getTimeStamp()));
+        int helpPostHour = getHourTimeAsInteger(TimeUtils.getFormattedHourFromTimeStamp(helpPost.getTimeStamp()));
         unsafeHoursSet.add(helpPostHour);
 
         mHelpPosts.add(helpPost);

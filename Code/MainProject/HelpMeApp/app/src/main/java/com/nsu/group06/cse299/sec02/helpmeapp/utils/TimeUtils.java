@@ -31,7 +31,7 @@ public abstract class TimeUtils {
      * @param timeStamp format- dd/MM/yyy HH:mm:ss
      * @return formatted hour, 20 -> 10 PM
      */
-    public static String getHourFromTimeStamp(String timeStamp) {
+    public static String getFormattedHourFromTimeStamp(String timeStamp) {
 
         String formattedHour = "NA";
 
@@ -53,5 +53,71 @@ public abstract class TimeUtils {
         }
 
         return  formattedHour;
+    }
+
+    /**
+     * get date from timestamp
+     * @param timeStamp format- dd/MM/yyy HH:mm:ss
+     * @return format- dd/MM/yyy
+     */
+    public static String getDateFromTimeStamp(String timeStamp) {
+
+        String date = "NA";
+
+        try {
+            String[] date_time = timeStamp.split(" ");
+            date = date_time[0];
+        } catch (Exception e) {
+
+            Log.d(TAG, "getDateFromTimeStamp: error formatting timeStamp to date-> "+ e.getMessage());
+        }
+
+        return date;
+    }
+
+    /**
+     * get hour from timestamp
+     * @param timeStamp format- dd/MM/yyy HH:mm:ss
+     * @return 0-24
+     */
+    public static int getHourFromTimeStamp(String timeStamp) {
+
+        int hour = -1;
+        try {
+            String[] date_time = timeStamp.split(" ");
+            String time = date_time[1];
+            String[] hour_min_sec = time.split(":");
+            String hh = hour_min_sec[0];
+
+            hour = Integer.parseInt(hh);
+        } catch (Exception e) {
+
+            Log.d(TAG, "getHourFromTimeStamp: error formatting timeStamp to hour-> "+ e.getMessage());
+        }
+
+        return hour;
+    }
+
+    /**
+     * get minute from timestamp
+     * @param timeStamp format- dd/MM/yyy HH:mm:ss
+     * @return 0-59
+     */
+    public static int getMinuteFromTimeStamp(String timeStamp) {
+
+        int minute = -1;
+        try {
+            String[] date_time = timeStamp.split(" ");
+            String time = date_time[1];
+            String[] hour_min_sec = time.split(":");
+            String hh = hour_min_sec[1];
+
+            minute = Integer.parseInt(hh);
+        } catch (Exception e) {
+
+            Log.d(TAG, "getHourFromTimeStamp: error formatting timeStamp to minute-> "+ e.getMessage());
+        }
+
+        return minute;
     }
 }
