@@ -1,13 +1,21 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.background.workers;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.SingleHelpPostActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
@@ -180,7 +188,7 @@ public class NotifyNearbyHelpPostWorker extends Worker {
         if(FetchedLocation.distanceBetween(mUser.getHomeAddressLatitude(),
                 helpPost.getLatitude(), mUser.getHomeAddressLongitude(), helpPost.getLongitude()) <= MINIMUM_DISTANCE_DIFFERENCE) {
 
-            if(isWithinLast30Mins(helpPost.getTimeStamp(), TimeUtils.getCurrentTime())) {
+            if(isWithinLastMinimumTimeDifference(helpPost.getTimeStamp(), TimeUtils.getCurrentTime())) {
 
                 mReadHelpPostsRealtimeDatabase.stopListeningForDataChange();
                 showNotificationOf(helpPost);
@@ -194,16 +202,53 @@ public class NotifyNearbyHelpPostWorker extends Worker {
      */
     private void showNotificationOf(HelpPost helpPost) {
 
-        Toast.makeText(getApplicationContext(), "new post", Toast.LENGTH_SHORT).show();
+        String notificationChannelId = "nearby-help-posts-72";
+        int notificationId = 159;
+
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Nearby help posts";
+            String description = "Notify when a nearby help post is made";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(notificationChannelId, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        String notificationTitle = "Someone is in trouble!";
+        String notificationDescription = "A help post was made from nearby. Tap to see.";
+
+        // Create an explicit intent for an Activity in your app
+        Intent intent = new Intent(getApplicationContext(), SingleHelpPostActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), notificationChannelId)
+                .setSmallIcon(R.drawable.ic_app_logo_dark_v2)
+                .setContentTitle(notificationTitle)
+                .setContentText(notificationDescription)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        notificationManager.notify(notificationId, builder.build());
     }
 
     /**
      * check if help post timeStamp is <=30mins from currentTime
-     * @param timeStamp, help post time
+     * @param helpPostTimeStamp, help post time
      * @param currentTime, current time
      * @return true if helpPost timeStamp<=30mins than currentTime
      */
-    private boolean isWithinLast30Mins(String timeStamp, String currentTime) {
+    private boolean isWithinLastMinimumTimeDifference(String helpPostTimeStamp, String currentTime) {
+
+        // TODO: implement
 
         return true;
     }
