@@ -1,6 +1,11 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +16,16 @@ import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.FindSafePlacesActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.InternetAlertActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.MenuActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.background.workers.NotifyNearbyHelpPostWorker;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * App home page, which is a menu
  */
 public class HomeActivity extends InternetAlertActivity {
+
+    private static final String UNIQUE_WORKER_ID = "com.nsu.group06.cse299.sec02.helpmeapp-nearbyHelpPostsNotifier";
 
     private Snackbar mSnackbar;
 
@@ -25,6 +35,8 @@ public class HomeActivity extends InternetAlertActivity {
         setContentView(R.layout.activity_home);
 
         init();
+
+        startNearbyHelpPostsNotificationWorker();
     }
 
     private void init() {
@@ -32,6 +44,23 @@ public class HomeActivity extends InternetAlertActivity {
         View view = findViewById(R.id.menu_main_layout);
         mSnackbar = Snackbar.make(view, R.string.internet_connection_lost, Snackbar.LENGTH_INDEFINITE);
         mSnackbar.setAction("dismiss", v -> mSnackbar.dismiss());
+    }
+
+    private void startNearbyHelpPostsNotificationWorker() {
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest notifyNearbyHelpPostsWorkRequest = new
+                PeriodicWorkRequest.Builder(NotifyNearbyHelpPostWorker.class, 15, TimeUnit.MINUTES)
+                //.setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                UNIQUE_WORKER_ID,
+                ExistingPeriodicWorkPolicy.KEEP,
+                notifyNearbyHelpPostsWorkRequest);
     }
 
     public void menuClick(View view) {
