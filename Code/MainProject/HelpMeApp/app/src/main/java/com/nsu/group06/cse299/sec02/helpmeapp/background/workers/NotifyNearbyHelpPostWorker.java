@@ -56,7 +56,7 @@ public class NotifyNearbyHelpPostWorker extends Worker {
     };
 
 
-    // variables to read/write information of users to/from the database
+    // variables to read information of user from the database
     private User mUser;
     private Database.SingleOperationDatabase<User> mUserInfoFirebaseRDBSingleOperation;
     private FirebaseRDBApiEndPoint mUserInfoApiEndPoint;
@@ -85,7 +85,7 @@ public class NotifyNearbyHelpPostWorker extends Worker {
             };
 
 
-    // variables to access database
+    // variables to access database for help posts
     private Database.RealtimeDatabase mReadHelpPostsRealtimeDatabase;
     private FirebaseRDBApiEndPoint mHelpPostsApiEndPoint =
             new FirebaseRDBApiEndPoint("/"+ NosqlDatabasePathUtils.HELP_POSTS_NODE);
@@ -126,6 +126,8 @@ public class NotifyNearbyHelpPostWorker extends Worker {
     @Override
     public Result doWork() {
 
+        Log.d(TAG, "doWork: work manager ran!");
+
         init();
 
         // Indicate whether the work finished successfully with the Result
@@ -154,7 +156,7 @@ public class NotifyNearbyHelpPostWorker extends Worker {
 
         mUserInfoApiEndPoint = new FirebaseRDBApiEndPoint(
                 "/"+ NosqlDatabasePathUtils.USER_NODE +
-                        ":" + mUser.getUid());
+                        ":" + user.getmUid());
 
         mUserInfoFirebaseRDBSingleOperation =
                 new FirebaseRDBSingleOperation<>(User.class, mUserInfoApiEndPoint, mUserInfoSingleOperationDatabaseCallback);
@@ -248,8 +250,26 @@ public class NotifyNearbyHelpPostWorker extends Worker {
      */
     private boolean isWithinLastMinimumTimeDifference(String helpPostTimeStamp, String currentTime) {
 
-        // TODO: implement
+        if(TimeUtils.getDateFromTimeStamp(helpPostTimeStamp).equals(TimeUtils.getDateFromTimeStamp(currentTime))) {
 
-        return true;
+            int helpPost_hour, helpPost_min, curr_hour, curr_min;
+
+            helpPost_hour = TimeUtils.getHourFromTimeStamp(helpPostTimeStamp);
+            helpPost_min = TimeUtils.getMinuteFromTimeStamp(helpPostTimeStamp);
+            curr_hour = TimeUtils.getHourFromTimeStamp(currentTime);
+            curr_min = TimeUtils.getMinuteFromTimeStamp(currentTime);
+
+            if(curr_hour-helpPost_hour > 1) return false;
+
+            else{
+
+                int minute_diff = curr_min - helpPost_min;
+                if(minute_diff<0) minute_diff+=60;
+
+                return minute_diff <= MINIMUM_TIME_DIFFERENCE;
+            }
+        }
+
+        return false;
     }
 }
