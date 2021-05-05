@@ -82,7 +82,8 @@
                 android:hint="@string/helpPost_phoneNumber_editTextHint"
                 android:importantForAutofill="no"
                 android:inputType="phone"
-                android:padding="16dp" />
+                android:padding="16dp"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/helpPost_description_EditText"
@@ -197,7 +198,7 @@
                     android:layout_margin="8dp"
                     android:fontFamily="@font/segoebold"
                     android:gravity="center"
-                    android:onClick="makePublicCheckboxClick"
+                    android:onClick="meCheckboxClick"
                     android:padding="4dp"
                     android:text="@string/me" />
 

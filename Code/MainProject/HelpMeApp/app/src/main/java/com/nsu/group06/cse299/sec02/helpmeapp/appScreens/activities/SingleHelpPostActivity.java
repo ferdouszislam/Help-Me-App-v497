@@ -28,7 +28,7 @@ public class SingleHelpPostActivity extends AppCompatActivity {
 
     // ui
     private View main_layout;
-    private TextView mPhoneNumberTextView, mAddressTextView, mTimeTextView;
+    private TextView /*mPhoneNumberTextView,*/ mAddressTextView, mTimeTextView;
     private TextView mContentTextView, mSearchingTextView;
     private ImageView mPhotoImageView;
 
@@ -85,7 +85,7 @@ public class SingleHelpPostActivity extends AppCompatActivity {
 
         main_layout = findViewById(R.id.singleHelpPost_mainLayout);
         mSearchingTextView = findViewById(R.id.searching_singleHelpPost_TextView);
-        mPhoneNumberTextView = findViewById(R.id.phoneNumber_singleHelpPost_TextView);
+        //mPhoneNumberTextView = findViewById(R.id.phoneNumber_singleHelpPost_TextView);
         mAddressTextView = findViewById(R.id.address_singleHelpPost_TextView);
         mTimeTextView = findViewById(R.id.time_singleHelpPost_TextView);
         mContentTextView = findViewById(R.id.content_singleHelpPost_TextView);
@@ -149,7 +149,7 @@ public class SingleHelpPostActivity extends AppCompatActivity {
 
         main_layout.setVisibility(View.VISIBLE);
 
-        mPhoneNumberTextView.setText(helpPost.getAuthorPhoneNumber());
+        //mPhoneNumberTextView.setText(helpPost.getAuthorPhoneNumber());
 
         if( helpPost.getAddress() !=null && !helpPost.getAddress().isEmpty()) mAddressTextView.setText(helpPost.getAddress());
         else mAddressTextView.setText(R.string.no_address);
@@ -170,17 +170,17 @@ public class SingleHelpPostActivity extends AppCompatActivity {
 
     }
 
-    /*
-    "Contact" button click listener
-     */
-    public void contactClick(View view) {
-
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + mHelpPost.getAuthorPhoneNumber()));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
+//    /*
+//    "Contact" button click listener
+//     */
+//    public void contactClick(View view) {
+//
+//        Intent intent = new Intent(Intent.ACTION_DIAL);
+//        intent.setData(Uri.parse("tel:" + mHelpPost.getAuthorPhoneNumber()));
+//        if (intent.resolveActivity(getPackageManager()) != null) {
+//            startActivity(intent);
+//        }
+//    }
 
     /*
     "Show Location" button click listener

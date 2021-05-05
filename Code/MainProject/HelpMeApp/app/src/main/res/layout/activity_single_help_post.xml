@@ -40,11 +40,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/light_blue_v2"
         android:elevation="4dp"
         android:padding="2dp"
@@ -72,6 +72,7 @@
                 android:fontFamily="@font/segoeui"
                 android:text="@string/phoneNumber_singleHelpPost_TextView_placeholder"
                 android:textSize="14sp"
+                android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_phone_icon" />
 
             <TextView
@@ -145,16 +146,16 @@
                 android:elevation="2dp"
                 android:fontFamily="@font/segoebold"
                 android:gravity="center"
-                android:onClick="contactClick"
                 android:padding="20dp"
                 android:text="@string/contact_singleHelpPost_Button_label"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@color/dark_blue_v2" />
+                android:textColor="@color/dark_blue_v2"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/showLocation_singleHelpPost_Button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
@@ -178,7 +179,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="32dp"
         android:fontFamily="@font/segoeui"
+        android:foregroundGravity="center"
+        android:gravity="center"
         android:onClick="retryClick"
         android:text="@string/searching_singleHelpPost_TextView"
         android:textSize="18sp"

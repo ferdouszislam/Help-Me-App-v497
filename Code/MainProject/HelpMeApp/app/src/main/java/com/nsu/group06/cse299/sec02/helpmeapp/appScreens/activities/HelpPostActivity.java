@@ -18,6 +18,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -69,7 +70,11 @@ public class HelpPostActivity extends AppCompatActivity {
     // ui
     private ImageView mCapturedImageView;
     private Button mTakeImageButton, mFetchLocationButton, mPostButton;
-    private EditText mPostDescriptionEditText, mAddressEditText, mPhoneNumberEditText;
+    private EditText mPostDescriptionEditText, mAddressEditText;//, mPhoneNumberEditText;
+    private CheckBox mMeCheckBox, mSomeoneElseCheckBox;
+
+    // checkbox state flag
+    private boolean mIsMeChecked = false, mIsSomeoneElseChecked = false;
 
     // model
     private CapturedImage mCapturedImage;
@@ -312,7 +317,9 @@ public class HelpPostActivity extends AppCompatActivity {
         mPostButton = findViewById(R.id.helpPost_Post_Button);
         mPostDescriptionEditText = findViewById(R.id.helpPost_description_EditText);
         mAddressEditText = findViewById(R.id.helpPost_Address_EditText);
-        mPhoneNumberEditText = findViewById(R.id.helpPost_phoneNumber_editText);
+        //mPhoneNumberEditText = findViewById(R.id.helpPost_phoneNumber_editText);
+        mMeCheckBox = findViewById(R.id.helpPost_me_CheckBox);
+        mSomeoneElseCheckBox = findViewById(R.id.helpPost_asWitness_CheckBox);
 
         mHelpPost = new HelpPost();
         mHelpPost.setAuthor("anonymous");
@@ -500,9 +507,9 @@ public class HelpPostActivity extends AppCompatActivity {
     'me' checkbox click
     Who is in trouble? -> Me
      */
-    public void makePublicCheckboxClick(View view) {
+    public void meCheckboxClick(View view) {
 
-        mHelpPost.setIsPublic(!mHelpPost.getIsPublic());
+        mIsMeChecked = mMeCheckBox.isChecked();
     }
 
     /*
@@ -511,7 +518,7 @@ public class HelpPostActivity extends AppCompatActivity {
      */
     public void asWitnessCheckboxClick(View view) {
 
-        // TODO: implement
+        mIsSomeoneElseChecked = mSomeoneElseCheckBox.isChecked();
     }
 
     /*
@@ -521,20 +528,23 @@ public class HelpPostActivity extends AppCompatActivity {
 
         String description = mPostDescriptionEditText.getText().toString().trim();
         String address = mAddressEditText.getText().toString().trim();
-        String phoneNumber = mPhoneNumberEditText.getText().toString().trim();
-        if(!phoneNumber.startsWith("+88")) phoneNumber = "+88" + phoneNumber;
+        //String phoneNumber = mPhoneNumberEditText.getText().toString().trim();
+        //if(!phoneNumber.startsWith("+88")) phoneNumber = "+88" + phoneNumber;
 
-        if(validateInputs(description, phoneNumber, mLocationWasFethced)){
+        if(validateInputs(description, /*phoneNumber,*/ mLocationWasFethced)){
 
             mHelpPost.setPostId(HelpPost.generateUniquePostId(mHelpPost.getAuthorId()));
             mHelpPost.setAuthor("anonymous");
-            mHelpPost.setAuthorPhoneNumber(phoneNumber);
+            //mHelpPost.setAuthorPhoneNumber(phoneNumber);
             mHelpPost.setContent(description);
             mHelpPost.setLatitude(mFetchedLocation.getmLatitude());
             mHelpPost.setLongitude(mFetchedLocation.getmLongitude());
             mHelpPost.setAltitude(mFetchedLocation.getmAltitude());
             mHelpPost.setAddress(address);
             mHelpPost.setTimeStamp(TimeUtils.getCurrentTime());
+
+            // all help posts are public
+            mHelpPost.setIsPublic(true);
 
             stopLocationUpdates(mLocationFetcher);
             if(!checkFetchedLocationAccuracy(mFetchedLocation)) showInaccurateLocationDialog();
@@ -550,7 +560,7 @@ public class HelpPostActivity extends AppCompatActivity {
 
         sendHelpPostInProgressUI();
 
-        smsToEmergencyContacts(mHelpPost, mEmergencyContactsSharedPref);
+        if(mIsMeChecked) smsToEmergencyContacts(mHelpPost, mEmergencyContactsSharedPref);
 
         mApiEndPoint = new FirebaseRDBApiEndPoint("/" + NosqlDatabasePathUtils.HELP_POSTS_NODE);
 
@@ -570,10 +580,10 @@ public class HelpPostActivity extends AppCompatActivity {
      * validate user inputs
      * @param description content of the help post
      * @param locationWasFetched location fetch flag
-     * @param phoneNumber help poster phone number
+     //* @param phoneNumber help poster phone number
      * @return valid or not
      */
-    private boolean validateInputs(String description, String phoneNumber, boolean locationWasFetched) {
+    private boolean validateInputs(String description, /*String phoneNumber,*/ boolean locationWasFetched) {
 
         boolean isValid = locationWasFetched;
 
@@ -583,11 +593,13 @@ public class HelpPostActivity extends AppCompatActivity {
             mPostDescriptionEditText.setError(getString(R.string.invalid_description));
         }
 
+        /*
         if(!UserInputValidator.isPhoneNumberValid(phoneNumber)){
 
             isValid = false;
             mPhoneNumberEditText.setError(getString(R.string.invalid_phone_number));
         }
+         */
 
         if(!locationWasFetched) showToast(getString(R.string.no_location_error));
 
@@ -636,6 +648,9 @@ public class HelpPostActivity extends AppCompatActivity {
      */
     private void smsToEmergencyContacts(HelpPost helpPost,
                                         EmergencyContactsSharedPref emergencyContactsSharedPref) {
+
+        // dont sens sms if 'me' is not in trouble
+        if(!mIsMeChecked) return;
 
         /*
          * to check if sms was sent, we need to register a broadcast receiver
@@ -853,14 +868,25 @@ public class HelpPostActivity extends AppCompatActivity {
 
     private void sendHelpPostSuccessUI(){
 
-        if(mHelpPostSmsSendDone && mHelpPostDatabaseSendDone) {
-            showToast(getString(R.string.posted));
-            finish();
+        if(mIsMeChecked) {
+
+            if(mHelpPostSmsSendDone && mHelpPostDatabaseSendDone) {
+                showToast(getString(R.string.posted));
+                finish();
+            }
+
+            else if(mHelpPostDatabaseSendDone){
+
+                showToast(getString(R.string.failed_to_send_sms_but_uploaded_to_database));
+            }
         }
 
-        else if(mHelpPostDatabaseSendDone){
+        else{
 
-            showToast(getString(R.string.failed_to_send_sms_but_uploaded_to_database));
+            if(mHelpPostDatabaseSendDone) {
+                showToast(getString(R.string.posted));
+                finish();
+            }
         }
     }
 

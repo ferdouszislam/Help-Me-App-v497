@@ -17,7 +17,7 @@ public class HelpPost implements Serializable {
     private String postId;
     private String authorId;
     private String author = "anonymous";
-    private String authorPhoneNumber;
+    //private String authorPhoneNumber;
     private String content;
     private double longitude, latitude, altitude;
     private String address = "";
@@ -32,12 +32,12 @@ public class HelpPost implements Serializable {
 
     public HelpPost(String postId, String authorId, String author, String content,
                     double longitude, double latitude, double altitude, String address,
-                    String authorPhoneNumber, String photoURL, String timeStamp, boolean isPublic) {
+                    /*String authorPhoneNumber,*/ String photoURL, String timeStamp, boolean isPublic) {
 
         this.postId = postId;
         this.authorId = authorId;
         this.author = author;
-        this.authorPhoneNumber = authorPhoneNumber;
+        //this.authorPhoneNumber = authorPhoneNumber;
         this.content = content;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -50,7 +50,7 @@ public class HelpPost implements Serializable {
 
     public static String getSMSBody(HelpPost helpPost){
 
-        String message = "Distress call from " + helpPost.getAuthorPhoneNumber() + "!";
+        String message = "HELP ME! from- ";// + helpPost.getAuthorPhoneNumber() + "!";
 
         if(helpPost.getAddress()!=null && !helpPost.getAddress().isEmpty()) {
             message += ", " + helpPost.getAddress();
@@ -108,13 +108,13 @@ public class HelpPost implements Serializable {
         this.author = mAuthor;
     }
 
-    public String getAuthorPhoneNumber() {
-        return authorPhoneNumber;
-    }
-
-    public void setAuthorPhoneNumber(String authorPhoneNumber) {
-        this.authorPhoneNumber = authorPhoneNumber;
-    }
+//    public String getAuthorPhoneNumber() {
+//        return authorPhoneNumber;
+//    }
+//
+//    public void setAuthorPhoneNumber(String authorPhoneNumber) {
+//        this.authorPhoneNumber = authorPhoneNumber;
+//    }
 
     public String getContent() {
         return content;
@@ -186,7 +186,7 @@ public class HelpPost implements Serializable {
                 "postId='" + postId + '\'' +
                 ", authorId='" + authorId + '\'' +
                 ", author='" + author + '\'' +
-                ", authorPhoneNumber='" + authorPhoneNumber + '\'' +
+                //", authorPhoneNumber='" + authorPhoneNumber + '\'' +
                 ", content='" + content + '\'' +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
