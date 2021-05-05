@@ -226,8 +226,9 @@ public class NotifyNearbyHelpPostWorker extends Worker {
 
         // Create an explicit intent for an Activity in your app
         Intent intent = new Intent(getApplicationContext(), SingleHelpPostActivity.class);
+        intent.putExtra(HelpPost.ACTIVITY_PASSING_KEY, helpPost);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), notificationChannelId)
                 .setSmallIcon(R.drawable.ic_app_logo_dark_v2)
@@ -250,26 +251,28 @@ public class NotifyNearbyHelpPostWorker extends Worker {
      */
     private boolean isWithinLastMinimumTimeDifference(String helpPostTimeStamp, String currentTime) {
 
-        if(TimeUtils.getDateFromTimeStamp(helpPostTimeStamp).equals(TimeUtils.getDateFromTimeStamp(currentTime))) {
+//        if(TimeUtils.getDateFromTimeStamp(helpPostTimeStamp).equals(TimeUtils.getDateFromTimeStamp(currentTime))) {
+//
+//            int helpPost_hour, helpPost_min, curr_hour, curr_min;
+//
+//            helpPost_hour = TimeUtils.getHourFromTimeStamp(helpPostTimeStamp);
+//            helpPost_min = TimeUtils.getMinuteFromTimeStamp(helpPostTimeStamp);
+//            curr_hour = TimeUtils.getHourFromTimeStamp(currentTime);
+//            curr_min = TimeUtils.getMinuteFromTimeStamp(currentTime);
+//
+//            if(curr_hour-helpPost_hour > 1) return false;
+//
+//            else{
+//
+//                int minute_diff = curr_min - helpPost_min;
+//                if(minute_diff<0) minute_diff+=60;
+//
+//                return minute_diff <= MINIMUM_TIME_DIFFERENCE;
+//            }
+//        }
+//
+//        return false;
 
-            int helpPost_hour, helpPost_min, curr_hour, curr_min;
-
-            helpPost_hour = TimeUtils.getHourFromTimeStamp(helpPostTimeStamp);
-            helpPost_min = TimeUtils.getMinuteFromTimeStamp(helpPostTimeStamp);
-            curr_hour = TimeUtils.getHourFromTimeStamp(currentTime);
-            curr_min = TimeUtils.getMinuteFromTimeStamp(currentTime);
-
-            if(curr_hour-helpPost_hour > 1) return false;
-
-            else{
-
-                int minute_diff = curr_min - helpPost_min;
-                if(minute_diff<0) minute_diff+=60;
-
-                return minute_diff <= MINIMUM_TIME_DIFFERENCE;
-            }
-        }
-
-        return false;
+        return true;
     }
 }

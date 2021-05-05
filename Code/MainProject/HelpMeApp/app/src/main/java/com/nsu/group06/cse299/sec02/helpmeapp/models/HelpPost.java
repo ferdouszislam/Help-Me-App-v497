@@ -11,6 +11,9 @@ import java.util.Date;
  */
 public class HelpPost implements Serializable {
 
+    // KEY for passing model between activities
+    public static final String ACTIVITY_PASSING_KEY = "com.nsu.group06.cse299.sec02.helpmeapp.models-helpPostObj";
+
     private String postId;
     private String authorId;
     private String author = "anonymous";
