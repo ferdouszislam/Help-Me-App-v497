@@ -265,12 +265,15 @@ public class NotifyNearbyHelpPostWorker extends Worker {
             curr_hour = TimeUtils.getHourFromTimeStamp(currentTime);
             curr_min = TimeUtils.getMinuteFromTimeStamp(currentTime);
 
-            if(curr_hour-helpPost_hour > 1) return false;
+            int hour_diff = curr_hour - helpPost_hour;
+
+            if(curr_hour > 1) return false;
 
             else{
 
                 int minute_diff = curr_min - helpPost_min;
-                if(minute_diff<0) minute_diff+=60;
+
+                if(hour_diff==1) minute_diff+=60;
 
                 return minute_diff <= MINIMUM_TIME_DIFFERENCE;
             }
