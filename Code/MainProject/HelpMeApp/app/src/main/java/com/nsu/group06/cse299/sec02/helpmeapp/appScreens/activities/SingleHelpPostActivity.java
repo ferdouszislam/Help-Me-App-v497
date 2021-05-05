@@ -76,9 +76,9 @@ public class SingleHelpPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_help_post);
 
-        handleIntent(getIntent());
-
         init();
+
+        handleIntent(getIntent());
     }
 
     private void init() {
@@ -108,10 +108,18 @@ public class SingleHelpPostActivity extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
 
             pid = appLinkData.getQueryParameter("pid");
+            mRetrievedPostId = pid;
+            loadHelpPost(mRetrievedPostId);
         }
 
-        mRetrievedPostId = pid;
-        loadHelpPost(mRetrievedPostId);
+        else {
+
+            if(mHelpPost!=null) return;
+
+            mHelpPost = (HelpPost) intent.getSerializableExtra(HelpPost.ACTIVITY_PASSING_KEY);
+            Log.d(TAG, "handleIntent: help post-> "+mHelpPost.toString());
+            showHelpPostUI(mHelpPost);
+        }
     }
 
     /**
@@ -150,7 +158,7 @@ public class SingleHelpPostActivity extends AppCompatActivity {
 
         mContentTextView.setText(helpPost.getContent());
 
-        if(helpPost.getPhotoURL() != null && !helpPost.getPhotoURL().isEmpty()){
+        if(helpPost.getPhotoURL() != null && !helpPost.getPhotoURL().isEmpty() && helpPost.getPhotoURL()!=""){
 
             mPhotoImageView.setVisibility(View.VISIBLE);
             Glide.with(this)
