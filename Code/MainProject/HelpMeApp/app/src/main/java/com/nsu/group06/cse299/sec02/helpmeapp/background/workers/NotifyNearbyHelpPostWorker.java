@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -230,11 +232,14 @@ public class NotifyNearbyHelpPostWorker extends Worker {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), notificationChannelId)
                 .setSmallIcon(R.drawable.ic_app_logo_dark_v2)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationDescription)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSound(notificationSound)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
@@ -251,28 +256,28 @@ public class NotifyNearbyHelpPostWorker extends Worker {
      */
     private boolean isWithinLastMinimumTimeDifference(String helpPostTimeStamp, String currentTime) {
 
-//        if(TimeUtils.getDateFromTimeStamp(helpPostTimeStamp).equals(TimeUtils.getDateFromTimeStamp(currentTime))) {
-//
-//            int helpPost_hour, helpPost_min, curr_hour, curr_min;
-//
-//            helpPost_hour = TimeUtils.getHourFromTimeStamp(helpPostTimeStamp);
-//            helpPost_min = TimeUtils.getMinuteFromTimeStamp(helpPostTimeStamp);
-//            curr_hour = TimeUtils.getHourFromTimeStamp(currentTime);
-//            curr_min = TimeUtils.getMinuteFromTimeStamp(currentTime);
-//
-//            if(curr_hour-helpPost_hour > 1) return false;
-//
-//            else{
-//
-//                int minute_diff = curr_min - helpPost_min;
-//                if(minute_diff<0) minute_diff+=60;
-//
-//                return minute_diff <= MINIMUM_TIME_DIFFERENCE;
-//            }
-//        }
-//
-//        return false;
+        if(TimeUtils.getDateFromTimeStamp(helpPostTimeStamp).equals(TimeUtils.getDateFromTimeStamp(currentTime))) {
 
-        return true;
+            int helpPost_hour, helpPost_min, curr_hour, curr_min;
+
+            helpPost_hour = TimeUtils.getHourFromTimeStamp(helpPostTimeStamp);
+            helpPost_min = TimeUtils.getMinuteFromTimeStamp(helpPostTimeStamp);
+            curr_hour = TimeUtils.getHourFromTimeStamp(currentTime);
+            curr_min = TimeUtils.getMinuteFromTimeStamp(currentTime);
+
+            if(curr_hour-helpPost_hour > 1) return false;
+
+            else{
+
+                int minute_diff = curr_min - helpPost_min;
+                if(minute_diff<0) minute_diff+=60;
+
+                return minute_diff <= MINIMUM_TIME_DIFFERENCE;
+            }
+        }
+
+        return false;
+
     }
+
 }
