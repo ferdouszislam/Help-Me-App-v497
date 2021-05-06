@@ -26,16 +26,20 @@ import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsShare
 import java.util.concurrent.TimeUnit;
 
 /**
- * App home page, which is a menu
+ * App home page
  */
 public class HomeActivity extends InternetAlertActivity {
 
-    private static final String UNIQUE_WORKER_ID = "com.nsu.group06.cse299.sec02.helpmeapp-nearbyHelpPostsNotifier";
     private static final String TAG = "HA-debug";
+    private static final String UNIQUE_WORKER_ID = "com.nsu.group06.cse299.sec02.helpmeapp-nearbyHelpPostsNotifier";
+    private static final int WORKER_INTERVAL = 30; // minutes
 
     // ui
     private Snackbar mSnackbar;
     private SwitchCompat mEmergencyModeSwitch;
+
+    // nearby recent help posts notification background worker
+    private PeriodicWorkRequest mNotifyNearbyHelpPostsWorkRequest;
 
     // emergency mode state shared preference
     private AppSettingsSharedPref mAppSettingsSharedPref;
@@ -64,19 +68,18 @@ public class HomeActivity extends InternetAlertActivity {
 
     private void startNearbyHelpPostsNotificationWorker() {
 
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        PeriodicWorkRequest notifyNearbyHelpPostsWorkRequest = new
-                PeriodicWorkRequest.Builder(NotifyNearbyHelpPostWorker.class, 15, TimeUnit.MINUTES)
-                //.setConstraints(constraints)
+        mNotifyNearbyHelpPostsWorkRequest = new
+                PeriodicWorkRequest.Builder(NotifyNearbyHelpPostWorker.class, WORKER_INTERVAL, TimeUnit.MINUTES)
+                .setConstraints(
+                        new Constraints.Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED).build()
+                )
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 UNIQUE_WORKER_ID,
                 ExistingPeriodicWorkPolicy.KEEP,
-                notifyNearbyHelpPostsWorkRequest);
+                mNotifyNearbyHelpPostsWorkRequest);
     }
 
     public void menuClick(View view) {
