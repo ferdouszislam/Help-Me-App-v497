@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nsu.group06.cse299.sec02.helpmeapp">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -58,7 +59,7 @@
 
         <activity
             android:name=".appScreens.v2_activities.FindSafePlacesActivity"
-            android:label="@string/title_activity_find_safe_places"></activity>
+            android:label="@string/title_activity_find_safe_places" />
         <activity android:name=".appScreens.v2_activities.EnterPhoneNumberActivity" />
         <activity android:name=".appScreens.v2_activities.EnterOTPCodeActivity" />
         <activity android:name=".appScreens.v2_activities.MenuActivity" />
@@ -125,6 +126,11 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".background.services.EmergencyModeService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
