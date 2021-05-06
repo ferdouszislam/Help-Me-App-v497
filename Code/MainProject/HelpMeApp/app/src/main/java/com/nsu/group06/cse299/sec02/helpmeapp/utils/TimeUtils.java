@@ -14,6 +14,14 @@ public abstract class TimeUtils {
     private static final String TAG = "TimeUtils-debug";
 
     /**
+     * get current time in milliseconds
+     */
+    public static long getCurrentTimeMillis() {
+
+        return new Date().getTime();
+    }
+
+    /**
      * get current time
      * @return time string format- Date/Month/Year, hour:minutes:second
      * courtesy - <https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java>
