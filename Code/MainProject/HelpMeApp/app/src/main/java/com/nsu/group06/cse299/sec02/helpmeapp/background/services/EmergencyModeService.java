@@ -5,10 +5,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.media.AudioManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -19,8 +23,12 @@ import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity
 
 public class EmergencyModeService extends Service {
 
+    private static final String TAG = "EMS-debug";
     private static final int FOREGROUND_SERVICE_ID = 184;
     private static final int FOREGROUND_NOTIFICATION_ID = 236;
+
+    // for listening to volume press
+    private SettingsContentObserver mSettingsContentObserver;
 
     @Nullable
     @Override
@@ -41,17 +49,35 @@ public class EmergencyModeService extends Service {
             NotificationManagerCompat.from(this).notify(FOREGROUND_NOTIFICATION_ID, getForegroundNotification());
         }
 
-        Toast.makeText(this, "Emergency mode service started!", Toast.LENGTH_LONG)
-                .show();
+        init();
 
         return START_STICKY;
+    }
+
+    /**
+     * start service work inside this method
+     */
+    private void init() {
+
+        setupVolumeListener();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
+        removeVolumeListener();
         removeForegroundNotification();
+    }
+
+    private void onVolumeUpPress() {
+
+        Log.d(TAG, "onVolumeUpPress: volume up");
+    }
+
+    private void onVolumeDownPress() {
+
+        Log.d(TAG, "onVolumeDownPress: volume down");
     }
 
     /**
@@ -107,5 +133,56 @@ public class EmergencyModeService extends Service {
     private void removeForegroundNotification() {
 
         NotificationManagerCompat.from(this).cancel(FOREGROUND_NOTIFICATION_ID);
+    }
+
+    private void setupVolumeListener() {
+
+        mSettingsContentObserver = new SettingsContentObserver(new Handler());
+
+        this.getContentResolver().registerContentObserver(android.provider.Settings.System.
+                CONTENT_URI, true, mSettingsContentObserver);
+    }
+
+    private void removeVolumeListener() {
+        if(mSettingsContentObserver !=null){
+            getApplicationContext().getContentResolver().unregisterContentObserver(mSettingsContentObserver);
+        }
+    }
+
+    /**
+     * Inner-class for listening to volume key press
+     * courtesy- <https://www.tutorialspoint.com/how-to-listen-volume-buttons-in-android-background-service>
+     */
+    public class SettingsContentObserver extends ContentObserver {
+
+        private int previousVolume;
+
+        SettingsContentObserver(Handler handler) {
+            super(handler);
+            AudioManager audio = (AudioManager) EmergencyModeService.this.getSystemService(Context.AUDIO_SERVICE);
+            previousVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+        }
+        @Override
+        public boolean deliverSelfNotifications() {
+            return super.deliverSelfNotifications();
+        }
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+
+            AudioManager audio = (AudioManager) EmergencyModeService.this.getSystemService(Context.AUDIO_SERVICE);
+            int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+            int delta = previousVolume - currentVolume;
+            if (delta > 0) {
+                // volume decreased, i.e volume down pressed
+                onVolumeDownPress();
+                previousVolume = currentVolume;
+            }
+            else if (delta < 0) {
+                // volume increased, i.e volume up pressed
+                onVolumeUpPress();
+                previousVolume = currentVolume;
+            }
+        }
     }
 }
