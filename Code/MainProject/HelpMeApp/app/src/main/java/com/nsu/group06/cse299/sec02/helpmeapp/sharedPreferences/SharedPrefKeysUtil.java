@@ -10,4 +10,6 @@ public class SharedPrefKeysUtil {
     public static final String PHONE_NUMBERS_KEY = "com.nsu.group06.cse299.sec02.helpmeapp-phoneNumbers";
     public static final String USERNAME_KEY = "com.nsu.group06.cse299.sec02.helpmeapp-usernames";
 
+    public static final String APP_SETTINGS_ID = "com.nsu.group06.cse299.sec02.helpmeapp-appSettings";
+    public static final String EMERGENCY_MODE_KEY = "com.nsu.group06.cse299.sec02.helpmeapp-emergencyMode";
 }

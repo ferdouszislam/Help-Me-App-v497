@@ -27,6 +27,21 @@ public abstract class SharedPrefsUtil {
     }
 
     /**
+     * Method to save boolean data to shared preferences
+     * @param key shared preference key
+     * @param data boolean data
+     */
+    protected void saveBooleanData(String key, boolean data) {
+
+        getSharedPreference().edit().putBoolean(key, data).apply();
+    }
+
+    protected boolean getBooleanData(String key, boolean defaultValue) {
+
+        return getSharedPreference().getBoolean(key, defaultValue);
+    }
+
+    /**
      * Method contains redundant code for storing String to a
      * SharedPreference String Set
      * @param key shared preference key
