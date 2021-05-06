@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.EnterPhoneNumberActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.background.services.EmergencyModeService;
+import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsSharedPref;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContactsSharedPref;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ public class SessionUtils {
         // so that back press from this point on closes the app
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+        shutDownServices(context);
+
         context.startActivity(intent);
     }
 
@@ -44,10 +48,21 @@ public class SessionUtils {
      */
     private static void clearSharedPreferences(Context context) {
 
+        // clear out emergency contacts
         EmergencyContactsSharedPref emergencyContactsSharedPref = EmergencyContactsSharedPref.build(context);
-
         ArrayList<String> phones = emergencyContactsSharedPref.getPhoneNumbers();
-
         for(String phone: phones) emergencyContactsSharedPref.removePhoneNumber(phone);
+
+        // clear out emergency mode state
+        AppSettingsSharedPref.build(context).setEmergencyModeState(false);
+    }
+
+    /**
+     * shut down services that require user to be logged in
+     */
+    private static void shutDownServices(Context context) {
+
+        // shut down EmergencyMode service
+        context.stopService(new Intent(context, EmergencyModeService.class));
     }
 }
