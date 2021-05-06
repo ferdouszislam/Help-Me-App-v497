@@ -89,6 +89,7 @@
             android:layout_margin="4dp"
             android:layout_weight="5"
             android:gravity="center_horizontal|top"
+            android:onClick="emergencyModeToggleClick"
             android:padding="4dp" />
     </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -8,7 +9,9 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -16,7 +19,9 @@ import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.FindSafePlacesActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.InternetAlertActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.MenuActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.background.services.EmergencyModeService;
 import com.nsu.group06.cse299.sec02.helpmeapp.background.workers.NotifyNearbyHelpPostWorker;
+import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsSharedPref;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +31,14 @@ import java.util.concurrent.TimeUnit;
 public class HomeActivity extends InternetAlertActivity {
 
     private static final String UNIQUE_WORKER_ID = "com.nsu.group06.cse299.sec02.helpmeapp-nearbyHelpPostsNotifier";
+    private static final String TAG = "HA-debug";
 
+    // ui
     private Snackbar mSnackbar;
+    private SwitchCompat mEmergencyModeSwitch;
+
+    // emergency mode state shared preference
+    private AppSettingsSharedPref mAppSettingsSharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,11 @@ public class HomeActivity extends InternetAlertActivity {
         View view = findViewById(R.id.menu_main_layout);
         mSnackbar = Snackbar.make(view, R.string.internet_connection_lost, Snackbar.LENGTH_INDEFINITE);
         mSnackbar.setAction("dismiss", v -> mSnackbar.dismiss());
+
+        mEmergencyModeSwitch = findViewById(R.id.activity_main_emergencyModeSwitch);
+
+        mAppSettingsSharedPref = AppSettingsSharedPref.build(this);
+        mEmergencyModeSwitch.setChecked(mAppSettingsSharedPref.getEmergencyModeState(false));
     }
 
     private void startNearbyHelpPostsNotificationWorker() {
@@ -66,6 +82,42 @@ public class HomeActivity extends InternetAlertActivity {
     public void menuClick(View view) {
 
         startActivity(new Intent(this, MenuActivity.class));
+    }
+
+    public void emergencyModeToggleClick(View view) {
+
+        mAppSettingsSharedPref.setEmergencyModeState(mEmergencyModeSwitch.isChecked());
+
+        if(mEmergencyModeSwitch.isChecked()) startEmergencyModeService();
+        else stopEmergencyModeService();
+    }
+
+    private void startEmergencyModeService() {
+
+        Intent intent = new Intent(this, EmergencyModeService.class);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            startForegroundService(intent);
+            Log.d(TAG, "startEmergencyModeService: foreground service started!");
+        }
+        else {
+
+            startService(intent);
+            Log.d(TAG, "startEmergencyModeService: couldn't start foreground service, service started with-> startService(...)");
+        }
+    }
+
+    private void stopEmergencyModeService() {
+
+        Intent intent = new Intent(this, EmergencyModeService.class);
+
+        try{
+            stopService(intent);
+        } catch (Exception e) {
+
+            Log.d(TAG, "stopEmergencyModeService: error-> "+e.getMessage());
+        }
     }
 
     /**
@@ -93,7 +145,6 @@ public class HomeActivity extends InternetAlertActivity {
     }
 
     public void findSafePlacesClick(View view) {
-    // TODO: implement. Currently opens help feed with all posts
 
         if(!mIsInternetAvailable){
             showNoInternetDialog();
