@@ -68,6 +68,8 @@ public class EmergencyModeService extends Service {
             NotificationManagerCompat.from(this).notify(FOREGROUND_NOTIFICATION_ID, getForegroundNotification());
         }
 
+        setEmergencyModeState();
+
         init();
 
         return START_STICKY;
@@ -85,8 +87,17 @@ public class EmergencyModeService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
+        resetEmergencyModeState(); // laav hoy nai kore
+
         removeVolumeListener();
         removeForegroundNotification();
+    }
+
+    private void setEmergencyModeState() {
+        AppSettingsSharedPref.build(this).setEmergencyModeState(true);
+    }
+    private void resetEmergencyModeState() {
+        AppSettingsSharedPref.build(this).setEmergencyModeState(false);
     }
 
     private void onVolumeUpPress() {
