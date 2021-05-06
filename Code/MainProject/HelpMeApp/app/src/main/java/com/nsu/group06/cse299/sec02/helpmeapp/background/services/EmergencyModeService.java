@@ -20,12 +20,26 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
 public class EmergencyModeService extends Service {
 
     private static final String TAG = "EMS-debug";
     private static final int FOREGROUND_SERVICE_ID = 184;
     private static final int FOREGROUND_NOTIFICATION_ID = 236;
+
+    // minimum number of key presses to fire a distress call
+    private static final int VOLUME_KEY_PRESS_THRESHOLD = 5;
+    // minimum time(in milli-seconds) interval between volume key press
+    private static final int VOLUME_KEY_PRESS_MINIMUM_TIME_INTERVAL = 1000;
+
+    // current volume key press count
+    private int mVolumeKeyPressCount = 0;
+    // last volume key time(in milliseconds)
+    private long mLastVolumeKeyPressTime = -1;
+
+    // flag for volume key press reset thread status
+    private boolean mIsResetVolumePressCountThreadRunning = false;
 
     // for listening to volume press
     private SettingsContentObserver mSettingsContentObserver;
@@ -39,6 +53,8 @@ public class EmergencyModeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        Log.d(TAG, "onStartCommand: EmergencyModeService started!");
+        
         try {
 
             startForeground(FOREGROUND_SERVICE_ID, getForegroundNotification());
@@ -73,11 +89,38 @@ public class EmergencyModeService extends Service {
     private void onVolumeUpPress() {
 
         Log.d(TAG, "onVolumeUpPress: volume up");
+        handleVolumeKeyPress();
     }
 
     private void onVolumeDownPress() {
 
         Log.d(TAG, "onVolumeDownPress: volume down");
+        handleVolumeKeyPress();
+    }
+
+    private void handleVolumeKeyPress() {
+
+        if(mLastVolumeKeyPressTime==-1 || !isWithinMinimumTimeInterval(mLastVolumeKeyPressTime)) {
+            mVolumeKeyPressCount = 0;
+        }
+
+        mVolumeKeyPressCount++;
+        mLastVolumeKeyPressTime = TimeUtils.getCurrentTimeMillis();
+
+        if(mVolumeKeyPressCount>=VOLUME_KEY_PRESS_THRESHOLD) {
+
+            sendHelpPost();
+            mVolumeKeyPressCount = 0;
+            mLastVolumeKeyPressTime = -1;
+        }
+    }
+
+    /**
+     * start the process of sending the help post
+     */
+    private void sendHelpPost() {
+
+        Log.d(TAG, "sendHelpPost: sending help post...");
     }
 
     /**
@@ -103,7 +146,7 @@ public class EmergencyModeService extends Service {
         }
 
         String notificationTitle = "Emergency mode active";
-        String notificationDescription = "Continuously tap volume down key to send out distress call";
+        String notificationDescription = "Continuously tap volume button to trigger";
 
         // Create an explicit intent for an Activity in your app
         Intent intent = new Intent(this, HomeActivity.class);
@@ -147,6 +190,20 @@ public class EmergencyModeService extends Service {
         if(mSettingsContentObserver !=null){
             getApplicationContext().getContentResolver().unregisterContentObserver(mSettingsContentObserver);
         }
+    }
+
+    /**
+     * is time difference between current and last volume key within minimum time interval
+     * @param lastVolumeKeyPressTime last volume key press time in milli-seconds
+     * @return true if last volume key press time is within minimum time interval, false otherwise
+     */
+    private boolean isWithinMinimumTimeInterval(long lastVolumeKeyPressTime) {
+
+        long timeDiffInMillis = (TimeUtils.getCurrentTimeMillis() - lastVolumeKeyPressTime);
+
+        Log.d(TAG, "isWithinMinimumTimeInterval: time diff = "+timeDiffInMillis);
+
+        return timeDiffInMillis <= VOLUME_KEY_PRESS_MINIMUM_TIME_INTERVAL;
     }
 
     /**
