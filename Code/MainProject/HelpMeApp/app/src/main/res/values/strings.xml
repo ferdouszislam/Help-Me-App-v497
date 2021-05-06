@@ -152,7 +152,7 @@
     <string name="resend">Resend</string>
     <string name="address_input_is_optional">Address input is optional</string>
     <string name="emergency_mode">Emergency Mode</string>
-    <string name="emergency_mode_explanation">Let’s you seek help instantly and share live location</string>
+    <string name="emergency_mode_explanation">Seek help instantly by pressing volume keys continuously</string>
     <string name="find_safe_places">Find Safe Places</string>
     <string name="seek_help">Seek Help</string>
     <string name="logout">Logout</string>
