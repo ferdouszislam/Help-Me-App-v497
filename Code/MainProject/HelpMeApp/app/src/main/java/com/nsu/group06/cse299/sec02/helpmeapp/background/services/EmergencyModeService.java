@@ -20,6 +20,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsSharedPref;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
 public class EmergencyModeService extends Service {
@@ -38,8 +39,10 @@ public class EmergencyModeService extends Service {
     // last volume key time(in milliseconds)
     private long mLastVolumeKeyPressTime = -1;
 
-    // flag for volume key press reset thread status
-    private boolean mIsResetVolumePressCountThreadRunning = false;
+    // minimum time interval(in milli-seconds) for two help posts
+    private static final long MINIMUM_TIME_INTERVAL_BETWEEN_HELP_POSTS = 5*60*1000; // 5 minutes
+    // last help post time(in milli-seconds)
+    private long mLastHelpPostTime = -1;
 
     // for listening to volume press
     private SettingsContentObserver mSettingsContentObserver;
@@ -100,7 +103,7 @@ public class EmergencyModeService extends Service {
 
     private void handleVolumeKeyPress() {
 
-        if(mLastVolumeKeyPressTime==-1 || !isWithinMinimumTimeInterval(mLastVolumeKeyPressTime)) {
+        if(mLastVolumeKeyPressTime==-1 || !isVolumeKeyPressWithinMinimumTimeInterval(mLastVolumeKeyPressTime)) {
             mVolumeKeyPressCount = 0;
         }
 
@@ -120,7 +123,12 @@ public class EmergencyModeService extends Service {
      */
     private void sendHelpPost() {
 
-        Log.d(TAG, "sendHelpPost: sending help post...");
+        if(mLastHelpPostTime==-1 || !isHelpPostWithinMinimumTimeInterval(mLastHelpPostTime)) {
+            Log.d(TAG, "sendHelpPost: sending help post...");
+            mLastHelpPostTime = TimeUtils.getCurrentTimeMillis();
+        }
+
+        else Log.d(TAG, "sendHelpPost: minimum time interval not met, not sending help post.");
     }
 
     /**
@@ -197,13 +205,19 @@ public class EmergencyModeService extends Service {
      * @param lastVolumeKeyPressTime last volume key press time in milli-seconds
      * @return true if last volume key press time is within minimum time interval, false otherwise
      */
-    private boolean isWithinMinimumTimeInterval(long lastVolumeKeyPressTime) {
+    private boolean isVolumeKeyPressWithinMinimumTimeInterval(long lastVolumeKeyPressTime) {
 
-        long timeDiffInMillis = (TimeUtils.getCurrentTimeMillis() - lastVolumeKeyPressTime);
+        return (TimeUtils.getCurrentTimeMillis() - lastVolumeKeyPressTime) <= VOLUME_KEY_PRESS_MINIMUM_TIME_INTERVAL;
+    }
 
-        Log.d(TAG, "isWithinMinimumTimeInterval: time diff = "+timeDiffInMillis);
+    /**
+     * is time difference between last help post and current help post enough
+     * @param lastHelpPostTime in milliseconds
+     * @return true if time interval is enough, otherwise false
+     */
+    private boolean isHelpPostWithinMinimumTimeInterval(long lastHelpPostTime) {
 
-        return timeDiffInMillis <= VOLUME_KEY_PRESS_MINIMUM_TIME_INTERVAL;
+        return (TimeUtils.getCurrentTimeMillis() - lastHelpPostTime) < MINIMUM_TIME_INTERVAL_BETWEEN_HELP_POSTS;
     }
 
     /**
