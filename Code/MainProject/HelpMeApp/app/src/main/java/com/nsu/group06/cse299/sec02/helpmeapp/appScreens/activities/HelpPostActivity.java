@@ -49,7 +49,6 @@ import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.RemoteStoragePathsUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.SessionUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
-import com.nsu.group06.cse299.sec02.helpmeapp.utils.UserInputValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -541,7 +540,7 @@ public class HelpPostActivity extends AppCompatActivity {
             mHelpPost.setLongitude(mFetchedLocation.getmLongitude());
             mHelpPost.setAltitude(mFetchedLocation.getmAltitude());
             mHelpPost.setAddress(address);
-            mHelpPost.setTimeStamp(TimeUtils.getCurrentTime());
+            mHelpPost.setTimeStamp(TimeUtils.getCurrentFormattedTime());
 
             // all help posts are public
             mHelpPost.setIsPublic(true);

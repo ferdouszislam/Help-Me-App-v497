@@ -18,7 +18,7 @@ public abstract class TimeUtils {
      * @return time string format- Date/Month/Year, hour:minutes:second
      * courtesy - <https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java>
      */
-    public static String getCurrentTime() {
+    public static String getCurrentFormattedTime() {
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();

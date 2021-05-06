@@ -192,7 +192,7 @@ public class NotifyNearbyHelpPostWorker extends Worker {
         if(FetchedLocation.distanceBetween(mUser.getHomeAddressLatitude(),
                 helpPost.getLatitude(), mUser.getHomeAddressLongitude(), helpPost.getLongitude()) <= MINIMUM_DISTANCE_DIFFERENCE) {
 
-            if(isWithinLastMinimumTimeDifference(helpPost.getTimeStamp(), TimeUtils.getCurrentTime())) {
+            if(isWithinLastMinimumTimeDifference(helpPost.getTimeStamp(), TimeUtils.getCurrentFormattedTime())) {
 
                 mReadHelpPostsRealtimeDatabase.stopListeningForDataChange();
                 showNotificationOf(helpPost);
