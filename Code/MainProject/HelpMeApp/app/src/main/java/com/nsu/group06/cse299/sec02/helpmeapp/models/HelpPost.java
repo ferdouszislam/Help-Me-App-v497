@@ -1,5 +1,7 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.models;
 
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,8 @@ public class HelpPost implements Serializable {
 
     // KEY for passing model between activities
     public static final String ACTIVITY_PASSING_KEY = "com.nsu.group06.cse299.sec02.helpmeapp.models-helpPostObj";
+
+    private static final String EMERGENCY_HELP_POST_CONTENT = "Emergency instant help requested!";
 
     private String postId;
     private String authorId;
@@ -46,6 +50,23 @@ public class HelpPost implements Serializable {
         this.photoURL = photoURL;
         this.timeStamp = timeStamp;
         this.isPublic = isPublic;
+    }
+
+    /**
+     * generate emergency help post
+     * @param uid user unique id
+     * @return helpPost
+     */
+    public static HelpPost generateEmergencyHelpPost(String uid) {
+
+        HelpPost helpPost = new HelpPost();
+        helpPost.setAuthorId(uid);
+        helpPost.setContent(EMERGENCY_HELP_POST_CONTENT);
+        helpPost.setPostId(generateUniquePostId(uid));
+        helpPost.setTimeStamp(TimeUtils.getCurrentFormattedTime());
+        helpPost.setIsPublic(true);
+
+        return helpPost;
     }
 
     public static String getSMSBody(HelpPost helpPost){
