@@ -23,6 +23,9 @@ import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
 import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.Database;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBApiEndPoint;
+import com.nsu.group06.cse299.sec02.helpmeapp.database.firebase_database.FirebaseRDBSingleOperation;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
@@ -30,6 +33,8 @@ import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
 import com.nsu.group06.cse299.sec02.helpmeapp.reverseGeocoding.ReverseGeocodeApiAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.reverseGeocoding.barikoiReverseGeo.BarikoiReverseGeocode;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsSharedPref;
+import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContactsSharedPref;
+import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
 public class EmergencyModeService extends Service {
@@ -165,6 +170,33 @@ public class EmergencyModeService extends Service {
                 }
             };
 
+    // variables to store help post to database
+    private Database.SingleOperationDatabase<HelpPost> mHelpPostSingleOperationDatabase;
+    private FirebaseRDBApiEndPoint mApiEndPoint;
+    private Database.SingleOperationDatabase.SingleOperationDatabaseCallback<HelpPost> mHelpPostSingleOperationDatabaseCallback =
+            new Database.SingleOperationDatabase.SingleOperationDatabaseCallback<HelpPost>() {
+                @Override
+                public void onDataRead(HelpPost data) {
+                    // keep black, not reading anything
+                }
+
+                @Override
+                public void onReadDataNotFound() {
+                    // keep black, not reading anything
+                }
+
+                @Override
+                public void onDatabaseOperationSuccess() {
+                    mHelpPostSentOnce = true;
+                }
+
+                @Override
+                public void onDatabaseOperationFailed(String message) {
+                    mHelpPostSentOnce = false;
+                    Log.d(TAG, "onDatabaseOperationFailed: help post database upload failed -> "+message);
+                }
+            };
+
     // model
     private HelpPost mHelpPost;
     private boolean mHelpPostSentOnce = false;
@@ -286,11 +318,19 @@ public class EmergencyModeService extends Service {
      */
     private void forwardHelpPost(HelpPost helpPost) {
 
+        mApiEndPoint = new FirebaseRDBApiEndPoint("/" + NosqlDatabasePathUtils.HELP_POSTS_NODE);
+
+        mHelpPostSingleOperationDatabase = new FirebaseRDBSingleOperation<>(
+                HelpPost.class,
+                mApiEndPoint,
+                mHelpPostSingleOperationDatabaseCallback
+        );
+
         if(mHelpPostSentOnce){
         // help post has been sent, update that help post in database only
 
             Log.d(TAG, "forwardHelpPost: updating help post-> "+helpPost.toString());
-            // TODO: update helpPost in database
+            mHelpPostSingleOperationDatabase.createWithId(helpPost.getPostId(), helpPost);
         }
 
         else{
@@ -298,14 +338,30 @@ public class EmergencyModeService extends Service {
             Log.d(TAG, "forwardHelpPost: sending help post-> "+helpPost.toString());
 
             mHelpPostSentOnce = true;
-            // TODO: send helpPost as sms and to database
+
+            mHelpPostSingleOperationDatabase.createWithId(helpPost.getPostId(),  helpPost);
+            smsToEmergencyContacts(helpPost, EmergencyContactsSharedPref.build(this));
         }
+    }
+
+    /**
+     * send sms to all saved emergency contacts
+     * @param helpPost help post model object
+     * @param emergencyContactsSharedPref shared pref with emergency contact phone numbers saved
+     */
+    private void smsToEmergencyContacts(HelpPost helpPost, EmergencyContactsSharedPref emergencyContactsSharedPref) {
+
+        Log.d(TAG, "smsToEmergencyContacts: sending sms-> "+helpPost.toString());
     }
 
     /**
      * get the address of fetched location
      */
     private void getAddressForFetchedLocation() {
+
+        mHelpPost.setLatitude(mFetchedLocation.getmLatitude());
+        mHelpPost.setLongitude(mFetchedLocation.getmLongitude());
+        mHelpPost.setAltitude(mFetchedLocation.getmAltitude());
 
         mReverseGeocodeApiAdapter = new BarikoiReverseGeocode(mReverseGeocodeCallback, this);
         mReverseGeocodeApiAdapter.setupApi();
