@@ -153,13 +153,44 @@ public class HomeActivity extends InternetAlertActivity {
 
         mAppSettingsSharedPref.setEmergencyModeState(mEmergencyModeSwitch.isChecked());
 
-        if(mEmergencyModeSwitch.isChecked()) getBackgroundLocationPermission();
+        if(mEmergencyModeSwitch.isChecked()) getSmsPermission();
         else stopEmergencyModeService();
     }
 
     /**
+     * Ask for sms sending permission
+     * and then ask for location permission
+     */
+    private void getSmsPermission(){
+
+        Dexter.withContext(this)
+                .withPermission(Manifest.permission.SEND_SMS)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+
+                        getLocationPermission();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+
+                        showSmsPermissionExplanationDialog(permissionDeniedResponse.isPermanentlyDenied());
+                        onEmergencyModeStartFailed();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                        // ignore for now
+                        permissionToken.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
+
+    /**
      * Ask for location access permission
-     * and then start EmergencyModeService or ask for background location
+     * and then ask for background location
      */
     private void getLocationPermission() {
 
@@ -176,8 +207,7 @@ public class HomeActivity extends InternetAlertActivity {
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
 
                         showLocationPermissionExplanationDialog(permissionDeniedResponse.isPermanentlyDenied());
-                        mEmergencyModeSwitch.setChecked(false);
-                        mAppSettingsSharedPref.setEmergencyModeState(false);
+                        onEmergencyModeStartFailed();
                     }
 
                     @Override
@@ -209,8 +239,7 @@ public class HomeActivity extends InternetAlertActivity {
                         public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
 
                             showLocationPermissionExplanationDialog(permissionDeniedResponse.isPermanentlyDenied());
-                            mEmergencyModeSwitch.setChecked(false);
-                            mAppSettingsSharedPref.setEmergencyModeState(false);
+                            onEmergencyModeStartFailed();
                         }
 
                         @Override
@@ -256,6 +285,11 @@ public class HomeActivity extends InternetAlertActivity {
 
             Log.d(TAG, "stopEmergencyModeService: error-> "+e.getMessage());
         }
+    }
+
+    private void onEmergencyModeStartFailed() {
+        mEmergencyModeSwitch.setChecked(false);
+        mAppSettingsSharedPref.setEmergencyModeState(false);
     }
 
     /**
@@ -319,6 +353,36 @@ public class HomeActivity extends InternetAlertActivity {
 
         mSnackbar.show();
         mIsInternetAvailable = false;
+    }
+
+    /*
+    show alert dialog explaining why sms permission is a MUST
+    with a simple dialog, quit activity if permission is permanently denied
+    courtesy - <https://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+     */
+    private void showSmsPermissionExplanationDialog(boolean isPermissionPermanentlyDenied) {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        String title = getString(R.string.sms_permission);
+        String explanation;
+
+        if(isPermissionPermanentlyDenied)
+            explanation = getString(R.string.sms_permission_permanantely_denied_explanation);
+        else
+            explanation = getString(R.string.sms_permission_explanation);
+
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(explanation);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
+                (dialog, which) -> {
+                    if(!isPermissionPermanentlyDenied)
+                        getSmsPermission();
+                    else
+                        finish();
+                });
+
+        alertDialog.show();
     }
 
     /*
