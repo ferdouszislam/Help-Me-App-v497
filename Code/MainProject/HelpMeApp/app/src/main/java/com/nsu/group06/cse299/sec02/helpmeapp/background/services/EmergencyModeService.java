@@ -1,5 +1,6 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.background.services;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,11 +21,15 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
+import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
+import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsSharedPref;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
 public class EmergencyModeService extends Service {
 
+    public static final long EMERGENCY_MODE_LOCATION_UPDATE_INTERVAL = 10000; // 10 seconds
     private static final String TAG = "EMS-debug";
     private static final int FOREGROUND_SERVICE_ID = 184;
     private static final int FOREGROUND_NOTIFICATION_ID = 236;
@@ -46,6 +51,60 @@ public class EmergencyModeService extends Service {
 
     // for listening to volume press
     private SettingsContentObserver mSettingsContentObserver;
+
+    // variables used to fetch location
+    private FetchedLocation mFetchedLocation;
+    private LocationFetcher mLocationFetcher;
+    private LocationFetcher.LocationSettingsSetupListener mLocationSettingsSetupListener =
+            new LocationFetcher.LocationSettingsSetupListener() {
+                @Override
+                public void onLocationSettingsSetupSuccess() {
+
+                    mLocationFetcher.startLocationUpdate();
+                }
+
+                @Override
+                public void onLocationSettingsSetupFailed(String message) {
+
+                    // user won't automatically be asked to enable location settings
+                    // since can't implement 'onActivityResult(...)' in a Service
+                    EmergencyModeService.this.stopSelf();
+
+                    Log.d(TAG, "onLocationSettingsSetupFailed: location settings setup failed ->" + message);
+                }
+            };
+    private LocationFetcher.LocationUpdateListener mLocationUpdateListener =
+            new LocationFetcher.LocationUpdateListener() {
+                @Override
+                public void onNewLocationUpdate(FetchedLocation fetchedLocation) {
+
+                    if(mFetchedLocation==null || mFetchedLocation.getmAccuracy() > fetchedLocation.getmAccuracy()
+                            || FetchedLocation.isLocationSignificantlyDifferent(mFetchedLocation, fetchedLocation)) {
+
+                        mFetchedLocation = fetchedLocation;
+
+                        Log.d(TAG, "onNewLocationUpdate: new location -> "+mFetchedLocation.toString());
+                    }
+                }
+
+                @Override
+                public void onPermissionNotGranted() {
+
+                    EmergencyModeService.this.stopSelf();
+                    mLocationFetcher.stopLocationUpdate();
+
+                    Log.d(TAG, "onPermissionNotGranted: location permission not granted");
+                }
+
+                @Override
+                public void onError(String message) {
+
+                    EmergencyModeService.this.stopSelf();
+                    mLocationFetcher.stopLocationUpdate();
+
+                    Log.d(TAG, "onError: location update error -> "+message);
+                }
+            };
 
     @Nullable
     @Override
@@ -81,6 +140,12 @@ public class EmergencyModeService extends Service {
     private void init() {
 
         setupVolumeListener();
+
+        mLocationFetcher = new FusedLocationFetcherApiAdapter(
+                EMERGENCY_MODE_LOCATION_UPDATE_INTERVAL, this,
+                mLocationSettingsSetupListener,
+                mLocationUpdateListener
+        );
     }
 
     @Override
@@ -91,6 +156,8 @@ public class EmergencyModeService extends Service {
 
         removeVolumeListener();
         removeForegroundNotification();
+
+        if(mLocationFetcher!=null) mLocationFetcher.stopLocationUpdate();
     }
 
     private void setEmergencyModeState() {
@@ -135,6 +202,9 @@ public class EmergencyModeService extends Service {
     private void sendHelpPost() {
 
         if(mLastHelpPostTime==-1 || !isHelpPostWithinMinimumTimeInterval(mLastHelpPostTime)) {
+
+            mLocationFetcher.startLocationUpdate();
+
             Log.d(TAG, "sendHelpPost: sending help post...");
             mLastHelpPostTime = TimeUtils.getCurrentTimeMillis();
         }
