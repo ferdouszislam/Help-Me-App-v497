@@ -12,6 +12,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -36,6 +37,8 @@ import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsShare
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.EmergencyContactsSharedPref;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.NosqlDatabasePathUtils;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
+
+import java.util.ArrayList;
 
 public class EmergencyModeService extends Service {
 
@@ -351,7 +354,25 @@ public class EmergencyModeService extends Service {
      */
     private void smsToEmergencyContacts(HelpPost helpPost, EmergencyContactsSharedPref emergencyContactsSharedPref) {
 
-        Log.d(TAG, "smsToEmergencyContacts: sending sms-> "+helpPost.toString());
+        ArrayList<String> emergencyContactPhoneNumbers =
+                emergencyContactsSharedPref.getPhoneNumbers();
+
+        String message = HelpPost.getSMSBody(helpPost);
+        Log.d(TAG, "smsToEmergencyContacts: message = "+message + "\n text length = "+message.length() + " number of emergency contacts = "+emergencyContactPhoneNumbers.size());
+
+        for(String phoneNumber : emergencyContactPhoneNumbers){
+
+            try {
+
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNumber,null,message, null,null);
+                Log.d(TAG, "smsToEmergencyContacts: "+phoneNumber);
+
+            } catch (Exception e){
+
+                Log.d(TAG, "smsToEmergencyContacts: failed to send sms to "+phoneNumber + "error->"+e.getMessage());
+            }
+        }
     }
 
     /**
