@@ -1,6 +1,5 @@
 package com.nsu.group06.cse299.sec02.helpmeapp.background.services;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -27,6 +26,9 @@ import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAut
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
+import com.nsu.group06.cse299.sec02.helpmeapp.models.HelpPost;
+import com.nsu.group06.cse299.sec02.helpmeapp.reverseGeocoding.ReverseGeocodeApiAdapter;
+import com.nsu.group06.cse299.sec02.helpmeapp.reverseGeocoding.barikoiReverseGeo.BarikoiReverseGeocode;
 import com.nsu.group06.cse299.sec02.helpmeapp.sharedPreferences.AppSettingsSharedPref;
 import com.nsu.group06.cse299.sec02.helpmeapp.utils.TimeUtils;
 
@@ -56,6 +58,7 @@ public class EmergencyModeService extends Service {
     private SettingsContentObserver mSettingsContentObserver;
 
     // variables used to fetch location
+    private boolean mLocationUpdateStarted = false;
     private FetchedLocation mFetchedLocation;
     private LocationFetcher mLocationFetcher;
     private LocationFetcher.LocationSettingsSetupListener mLocationSettingsSetupListener =
@@ -81,11 +84,13 @@ public class EmergencyModeService extends Service {
                 @Override
                 public void onNewLocationUpdate(FetchedLocation fetchedLocation) {
 
+                    mLocationUpdateStarted = true;
+
                     if(mFetchedLocation==null || mFetchedLocation.getmAccuracy() > fetchedLocation.getmAccuracy()
                             || FetchedLocation.isLocationSignificantlyDifferent(mFetchedLocation, fetchedLocation)) {
 
                         mFetchedLocation = fetchedLocation;
-
+                        getAddressForFetchedLocation();
                         Log.d(TAG, "onNewLocationUpdate: new location -> "+mFetchedLocation.toString());
                     }
                 }
@@ -109,6 +114,37 @@ public class EmergencyModeService extends Service {
                 }
             };
 
+    // variables for reverse geo-coding
+    private ReverseGeocodeApiAdapter mReverseGeocodeApiAdapter = null;
+    private ReverseGeocodeApiAdapter.Callback mReverseGeocodeCallback = new ReverseGeocodeApiAdapter.Callback() {
+        @Override
+        public void onSetupSuccess() {
+
+            mReverseGeocodeApiAdapter.fetchAddress(mFetchedLocation.getmLatitude(), mFetchedLocation.getmLongitude());
+        }
+
+        @Override
+        public void onSetupFailure(String message) {
+
+            forwardHelpPost(mHelpPost);
+            Log.d(TAG, "onSetupFailure: error-> "+message);
+        }
+
+        @Override
+        public void onAddressFetchSuccess(String address) {
+
+            mHelpPost.setAddress(address);
+            forwardHelpPost(mHelpPost);
+        }
+
+        @Override
+        public void onAddressFetchError(String message) {
+
+            forwardHelpPost(mHelpPost);
+            Log.d(TAG, "onSetupFailure: error-> "+message);
+        }
+    };
+
     // variables used for fetching user uid
     private Authentication mAuth;
     private Authentication.AuthenticationCallbacks mAuthCallbacks =
@@ -116,7 +152,7 @@ public class EmergencyModeService extends Service {
                 @Override
                 public void onAuthenticationSuccess(AuthenticationUser user) {
 
-                    // mHelpPost.setAuthorId(user.getmUid());
+                    mHelpPost = HelpPost.generateEmergencyHelpPost(user.getmUid());
 
                     Log.d(TAG, "onAuthenticationSuccess: uid = "+user.getmUid());
                 }
@@ -128,6 +164,10 @@ public class EmergencyModeService extends Service {
                     Log.d(TAG, "onAuthenticationFailure: error-> "+message);
                 }
             };
+
+    // model
+    private HelpPost mHelpPost;
+    private boolean mHelpPostSentOnce = false;
 
     @Nullable
     @Override
@@ -218,7 +258,7 @@ public class EmergencyModeService extends Service {
 
         if(mVolumeKeyPressCount>=VOLUME_KEY_PRESS_THRESHOLD) {
 
-            sendHelpPost();
+            triggerHelpPost();
             mVolumeKeyPressCount = 0;
             mLastVolumeKeyPressTime = -1;
         }
@@ -227,17 +267,48 @@ public class EmergencyModeService extends Service {
     /**
      * start the process of sending the help post
      */
-    private void sendHelpPost() {
+    private void triggerHelpPost() {
 
         if(mLastHelpPostTime==-1 || !isHelpPostWithinMinimumTimeInterval(mLastHelpPostTime)) {
 
+            if(mLocationUpdateStarted) mLocationFetcher.stopLocationUpdate();
             mLocationFetcher.startLocationUpdate();
 
-            Log.d(TAG, "sendHelpPost: sending help post...");
             mLastHelpPostTime = TimeUtils.getCurrentTimeMillis();
         }
 
         else Log.d(TAG, "sendHelpPost: minimum time interval not met, not sending help post.");
+    }
+
+    /**
+     * forward help post to database and as sms to emergency contacts
+     * @param helpPost model
+     */
+    private void forwardHelpPost(HelpPost helpPost) {
+
+        if(mHelpPostSentOnce){
+        // help post has been sent, update that help post in database only
+
+            Log.d(TAG, "forwardHelpPost: updating help post-> "+helpPost.toString());
+            // TODO: update helpPost in database
+        }
+
+        else{
+
+            Log.d(TAG, "forwardHelpPost: sending help post-> "+helpPost.toString());
+
+            mHelpPostSentOnce = true;
+            // TODO: send helpPost as sms and to database
+        }
+    }
+
+    /**
+     * get the address of fetched location
+     */
+    private void getAddressForFetchedLocation() {
+
+        mReverseGeocodeApiAdapter = new BarikoiReverseGeocode(mReverseGeocodeCallback, this);
+        mReverseGeocodeApiAdapter.setupApi();
     }
 
     /**
