@@ -12,6 +12,8 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
 
@@ -313,6 +315,20 @@ public class EmergencyModeService extends Service {
         }
 
         else Log.d(TAG, "sendHelpPost: minimum time interval not met, not sending help post.");
+
+        alertUserOfTrigger();
+    }
+
+    /**
+     * Alert user of trigger (by vibrating phone)
+     */
+    private void alertUserOfTrigger() {
+
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.cancel();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+        }
     }
 
     /**
