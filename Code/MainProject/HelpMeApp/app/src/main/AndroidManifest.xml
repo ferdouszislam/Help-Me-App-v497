@@ -20,6 +20,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <!--Queries to open other apps -->
     <queries>
@@ -129,7 +130,8 @@
 
         <service
             android:name=".background.services.EmergencyModeService"
-            android:exported="false"/>
+            android:exported="false"
+            android:foregroundServiceType="location"/>
 
     </application>
 
