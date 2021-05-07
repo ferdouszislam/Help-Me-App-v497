@@ -21,6 +21,9 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.activities.HomeActivity;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.Authentication;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.AuthenticationUser;
+import com.nsu.group06.cse299.sec02.helpmeapp.auth.v2_phoneAuth.FirebasePhoneAuth;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.FetchedLocation;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.LocationFetcher;
 import com.nsu.group06.cse299.sec02.helpmeapp.fetchLocation.fusedLocationApi.FusedLocationFetcherApiAdapter;
@@ -106,6 +109,26 @@ public class EmergencyModeService extends Service {
                 }
             };
 
+    // variables used for fetching user uid
+    private Authentication mAuth;
+    private Authentication.AuthenticationCallbacks mAuthCallbacks =
+            new Authentication.AuthenticationCallbacks() {
+                @Override
+                public void onAuthenticationSuccess(AuthenticationUser user) {
+
+                    // mHelpPost.setAuthorId(user.getmUid());
+
+                    Log.d(TAG, "onAuthenticationSuccess: uid = "+user.getmUid());
+                }
+
+                @Override
+                public void onAuthenticationFailure(String message) {
+
+                    EmergencyModeService.this.stopSelf();
+                    Log.d(TAG, "onAuthenticationFailure: error-> "+message);
+                }
+            };
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -146,11 +169,16 @@ public class EmergencyModeService extends Service {
                 mLocationSettingsSetupListener,
                 mLocationUpdateListener
         );
+
+        mAuth = new FirebasePhoneAuth(mAuthCallbacks);
+        mAuth.authenticateUser();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        Log.d(TAG, "onDestroy: EmergencyService stopping...");
 
         resetEmergencyModeState(); // laav hoy nai kore
 
