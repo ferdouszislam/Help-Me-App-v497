@@ -29,7 +29,7 @@ public class HelpPost implements Serializable {
     private String timeStamp;
     private boolean isPublic = false;
 
-    private static final String URL = "https://helpmeappweb.herokuapp.com/help?pid=";
+    private static final String URL = "https://helpmeapps.herokuapp.com/help?pid=";
 
     public HelpPost() {
     }
