@@ -66,6 +66,16 @@ public class FusedLocationFetcherApiAdapter extends LocationFetcher {
         }
     };
 
+    public FusedLocationFetcherApiAdapter(long interval, Context context, LocationSettingsSetupListener locationSettingsSetupListener) {
+        super(interval, context, locationSettingsSetupListener);
+
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setInterval(super.interval);
+        mLocationRequest.setFastestInterval(super.interval / 2);
+        mLocationRequest.setPriority(PRIORITY_LEVEL);
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+    }
 
     public FusedLocationFetcherApiAdapter(long interval, Context context, LocationSettingsSetupListener locationSettingsSetupListener,
                                           LocationUpdateListener locationUpdateListener) {

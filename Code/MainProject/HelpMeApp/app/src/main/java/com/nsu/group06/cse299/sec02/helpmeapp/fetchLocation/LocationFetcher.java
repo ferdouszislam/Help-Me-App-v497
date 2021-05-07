@@ -20,6 +20,16 @@ public abstract class LocationFetcher {
     protected LocationSettingsSetupListener locationSettingsSetupListener;
     protected LocationUpdateListener locationUpdateListener;
 
+    /**
+     * constructor for only setting up location settings
+     * @param context calling activity
+     * @param locationSettingsSetupListener location settings state listener
+     */
+    public LocationFetcher(long interval, Context context, LocationSettingsSetupListener locationSettingsSetupListener) {
+        this.context = context;
+        this.locationSettingsSetupListener = locationSettingsSetupListener;
+    }
+
     public LocationFetcher(long interval, Context context, LocationSettingsSetupListener locationSettingsSetupListener,
                            LocationUpdateListener locationUpdateListener) {
         this.interval = interval;
