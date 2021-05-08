@@ -24,6 +24,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.nsu.group06.cse299.sec02.helpmeapp.R;
+import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.EmergencyModeDetailsActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.FindSafePlacesActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.InternetAlertActivity;
 import com.nsu.group06.cse299.sec02.helpmeapp.appScreens.v2_activities.MenuActivity;
@@ -155,6 +156,11 @@ public class HomeActivity extends InternetAlertActivity {
 
         if(mEmergencyModeSwitch.isChecked()) getSmsPermission();
         else stopEmergencyModeService();
+    }
+
+    public void emergencyModeInfoClick(View view) {
+
+        startActivity(new Intent(this, EmergencyModeDetailsActivity.class));
     }
 
     /**
