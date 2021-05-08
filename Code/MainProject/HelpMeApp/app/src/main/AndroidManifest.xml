@@ -10,7 +10,9 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,9 +21,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-
-    <!--Queries to open other apps -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- Queries to open other apps -->
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -32,10 +32,9 @@
         </intent>
         -->
         <intent>
-            <action android:name="android.intent.action.CAMERA_BUTTON"/>
+            <action android:name="android.intent.action.CAMERA_BUTTON" />
         </intent>
     </queries>
-
 
     <application
         android:allowBackup="true"
@@ -44,7 +43,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <activity android:name=".appScreens.v2_activities.EmergencyModeDetailsActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -107,8 +106,10 @@
         <activity
             android:name=".appScreens.activities.SetupProfileActivity"
             android:label="@string/setup_profile_title" />
-        <!-- android:windowSoftInputMode="adjustPan"
-        so that keyboard does not push the UI components up -->
+        <!--
+ android:windowSoftInputMode="adjustPan"
+        so that keyboard does not push the UI components up
+        -->
         <activity
             android:name=".appScreens.activities.HelpPostActivity"
             android:label="@string/help_post_title"
@@ -130,8 +131,7 @@
         <service
             android:name=".background.services.EmergencyModeService"
             android:exported="false"
-            android:foregroundServiceType="location"/>
-
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
