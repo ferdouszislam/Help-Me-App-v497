@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_button2"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:background="@color/light_v2"
+        android:contentDescription="@string/close_icon_alt"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_close" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emergency_mode_explanation_emergencyModeTriggerStepsTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/segoebold"
+                android:padding="4dp"
+                android:text="@string/emergency_mode_steps_title"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/emergency_mode_explanation_emergencyModeTriggerStepsContentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/segoeui"
+                android:padding="4dp"
+                android:text="@string/emergency_mode_steps_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/emergency_mode_explanation_emergencyModeTriggerRequirementsTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/segoebold"
+                android:padding="4dp"
+                android:text="@string/emergency_mode_requirements_title"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/emergency_mode_explanation_emergencyModeTriggerRequirementsContentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/segoeui"
+                android:padding="4dp"
+                android:text="@string/emergency_mode_requirements_content"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

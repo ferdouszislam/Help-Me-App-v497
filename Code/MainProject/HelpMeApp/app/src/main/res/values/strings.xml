@@ -176,5 +176,21 @@
     <string name="unsafe_location_time_placeholder">Between 11.00 PM - 3.00 AM</string>
     <string name="show_nearby_posts">Show nearby posts</string>
 
+    <string name="emergency_mode_steps_title">How to trigger instant help request?</string>
+    <string name="emergency_mode_steps_content">
+        <b><u>Step-1</u></b> Keep the emergency mode turned on <br/><br/>
+        <b><u>Step-2</u></b> Press the power button(lock/unlock button) once <br/><br/>
+        <b><u>Step-3</u></b> Press volume up button two times <br/><br/>
+        <b><u>Step-4</u></b> Press volume down button two times <br/><br/>
+        <b><u>Step-5</u></b> Your phone will vibrate to let you know that a help request has been sent
+    </string>
+
+    <string name="emergency_mode_requirements_title">For an help post to be triggered you <b>MUST</b> make sure,</string>
+    <string name="emergency_mode_requirements_content">
+        <b>1.</b> Internet is available (via wifi or mobile network) <br/><br/>
+        <b>2.</b> Location is turned on <br/><br/>
+        <b>3.</b> You have an active SIM card with balance to reach your emergency contacts by SMS
+    </string>
+    <string name="close_icon_alt">close</string>
 
 </resources>
